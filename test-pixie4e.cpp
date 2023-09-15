@@ -5,7 +5,7 @@
 int main() {
   std::cout << "BEGINS" << std::endl;
 
-  std::ifstream infile("data/pixie4e.raw", std::ifstream::binary);
+  std::ifstream infile("data/StilbeneAmCs_500_0253.set", std::ifstream::binary);
 
   kaitai::kstream ks(&infile);
 
