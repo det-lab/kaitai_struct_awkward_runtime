@@ -19,7 +19,7 @@ set (MAIN_SOURCES
 add_library (${SKBUILD_PROJECT_NAME} SHARED ${MAIN_HEADERS} ${MAIN_SOURCES})
 
 include(FetchContent)
-set(AWKWARD_VERSION "v2.1.0")
+set(AWKWARD_VERSION "v2.4.3")
 FetchContent_Declare(
   awkward-headers
   URL      https://github.com/scikit-hep/awkward/releases/download/${AWKWARD_VERSION}/header-only.zip
