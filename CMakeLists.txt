@@ -31,10 +31,8 @@ if(NOT awkward-headers_POPULATED)
   add_subdirectory(${awkward-headers_SOURCE_DIR} ${awkward-headers_BINARY_DIR} EXCLUDE_FROM_ALL)
 endif()
 
-pybind11_add_module(my_app MODULE src/main.cpp)
-target_link_libraries(my_app PRIVATE awkward::layout-builder)
+pybind11_add_module(awkward_kaitai src/main.cpp)
+target_link_libraries(awkward_kaitai PRIVATE awkward::layout-builder)
 
-install(TARGETS
-    DESTINATION ${SKBUILD_PROJECT_NAME}
-    PUBLIC_HEADER DESTINATION include/kaitai
-)
+# Install into wheel
+install(TARGETS awkward_kaitai DESTINATION .)
