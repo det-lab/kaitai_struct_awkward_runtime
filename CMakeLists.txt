@@ -31,6 +31,24 @@ if(NOT awkward-headers_POPULATED)
   add_subdirectory(${awkward-headers_SOURCE_DIR} ${awkward-headers_BINARY_DIR} EXCLUDE_FROM_ALL)
 endif()
 
+# Specifying the KSY file path
+option(KSY_FILE "Specify the KSY file to use" "")
+if (NOT KSY_FILE)
+    message(FATAL_ERROR "Please specify the KSY file using -DKSY_FILE=<path_to_ksy_file>")
+endif()
+
+# Run sbt package command to compile kaitai_struct_compiler code
+
+execute_process(
+    COMMAND sbt package
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/kaitai_awkward_runtime/kaitai_struct_compiler
+)
+
+execute_process(
+    COMMAND ./kaitai-struct-compiler -t awkward --outdir src-kaitai ${KSY_FILE}
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+)
+
 pybind11_add_module(awkward_kaitai src/main.cpp)
 target_link_libraries(awkward_kaitai PRIVATE awkward::layout-builder)
 
