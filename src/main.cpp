@@ -7,16 +7,6 @@
 
 namespace py = pybind11;
 
-// Defines taken from how-to-use-header-only-layoutbuilder.md
-using UserDefinedMap = std::map<std::size_t, std::string>;
-template<class... BUILDERS>
-using RecordBuilder = awkward::LayoutBuilder::Record<UserDefinedMap, BUILDERS...>;
-template<std::size_t field_name, class BUILDER>
-using RecordField = awkward::LayoutBuilder::Field<field_name, BUILDER>;
-template<class PRIMITIVE, class BUILDER>
-using ListOffsetBuilder = awkward::LayoutBuilder::ListOffset<PRIMITIVE, BUILDER>;
-template<class PRIMITIVE>
-using NumpyBuilder = awkward::LayoutBuilder::Numpy<PRIMITIVE>;
 enum Field : std::size_t {
     one, two
 };
@@ -109,7 +99,10 @@ py::object create_awkward_array() {
     two_subbuilder.extend(data, data_size);
     two_builder.end_list();
 
-    return snapshot_builder(builder);
+    std::ifstream infile("../data/animal.raw", std::ifstream::binary);
+    kaitai::kstream ks(&infile);
+    animal_t zoo = animal_t(&ks);
+    return snapshot_builder(zoo.animal_builder);
 }
 
 
