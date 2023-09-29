@@ -10,29 +10,18 @@ Steps for reproducing the environment:
 git clone --recursive https://github.com/ManasviGoyal/kaitai_awkward_runtime.git
 ```
 
-2. Change to `kaitai_struct_compiler` directory: 
+2. Run CMake
 ```
-cd awkward_kaitai_tests\kaitai_struct_compiler
-sbt package
-cd ..
+cmake -B build
 ```
 
-3. Convert the KSY specs into C++ code in the awkward_kaitai_tests repository: 
-Note, make sure it is executable, first:
+3. Install the library
 ```
-chmod +x kaitai-struct-compiler
-```
-```
-./kaitai-struct-compiler -t awkward --outdir src-animal schemas/animal.ksy
+pip install .
 ```
 
-4. Then compile it: 
+4. Print the returned `ak.Array`
+```python
+from awkward_kaitai import create_awkward_array
+print(create_awkward_array())
 ```
-g++ -DKS_STR_ENCODING_NONE -Ikaitai_struct_cpp_runtime -I. kaitai_struct_cpp_runtime/kaitai/kaitaistream.cpp src-animal/animal.cpp test-animal.cpp -o test-animal
-```
-
-5. Run: 
-```
-./test-animal
-```
-
