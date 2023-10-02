@@ -10,9 +10,9 @@ Steps for reproducing the environment:
 git clone --recursive https://github.com/ManasviGoyal/kaitai_awkward_runtime.git
 ```
 
-2. Run CMake
+2. Upload KSY file path
 ```
-cmake -B build
+export KSY_FILE=schemas/animal.ksy
 ```
 
 3. Install the library
@@ -23,5 +23,5 @@ pip install .
 4. Print the returned `ak.Array`
 ```python
 from awkward_kaitai import create_awkward_array
-print(create_awkward_array())
+print(create_awkward_array("../data/animal.raw"))
 ```

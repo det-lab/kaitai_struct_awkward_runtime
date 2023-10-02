@@ -63,43 +63,8 @@ py::object snapshot_builder(const T &builder) {
  * Create array, and return its snapshot
  * @return pyobject of Awkward Array
  */
-py::object create_awkward_array() {
-    UserDefinedMap fields_map({
-        {Field::one, "one"},
-        {Field::two, "two"}
-    });
-
-    RecordBuilder<
-            RecordField<Field::one, NumpyBuilder<double>>,
-            RecordField<Field::two, ListOffsetBuilder<int64_t,
-                    NumpyBuilder<int32_t>>>
-    > builder(fields_map);
-
-    auto &one_builder = builder.content<Field::one>();
-    auto &two_builder = builder.content<Field::two>();
-
-    one_builder.append(1.1);
-
-    auto &two_subbuilder = two_builder.begin_list();
-    two_subbuilder.append(1);
-    two_builder.end_list();
-
-    one_builder.append(2.2);
-
-    two_builder.begin_list();
-    two_subbuilder.append(1);
-    two_subbuilder.append(2);
-    two_builder.end_list();
-
-    one_builder.append(3.3);
-    size_t data_size = 3;
-    int32_t data[3] = {1, 2, 3};
-
-    two_builder.begin_list();
-    two_subbuilder.extend(data, data_size);
-    two_builder.end_list();
-
-    std::ifstream infile("../data/animal.raw", std::ifstream::binary);
+py::object create_awkward_array(std::string binary_data) {
+    std::ifstream infile(binary_data, std::ifstream::binary);
     kaitai::kstream ks(&infile);
     animal_t zoo = animal_t(&ks);
     return snapshot_builder(zoo.animal_builder);
@@ -107,6 +72,6 @@ py::object create_awkward_array() {
 
 
 PYBIND11_MODULE(awkward_kaitai, m) {
-    m.doc() = "pybind11 example plugin"; // optional module docstring
+    m.doc() = "pybind11 plugin"; // optional module docstring
     m.def("create_awkward_array", &create_awkward_array, "A function that creates an awkward array");
 }
