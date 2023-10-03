@@ -7,11 +7,6 @@
 
 namespace py = pybind11;
 
-enum Field : std::size_t {
-    one, two
-};
-
-
 /**
  * Create a snapshot of the given builder, and return an `ak.Array` pyobject
  * @tparam T type of builder
@@ -36,8 +31,6 @@ py::object snapshot_builder(const T &builder) {
     auto from_buffers = py::module::import("awkward").attr("from_buffers");
 
     // Build Python dictionary containing arrays
-    // dtypes not important here as long as they match the underlying buffer
-    // as Awkward Array calls `frombuffer` to convert to the correct type
     py::dict container;
     for (auto it: buffers) {
 
@@ -55,23 +48,19 @@ py::object snapshot_builder(const T &builder) {
         );
     }
     return from_buffers(builder.form(), builder.length(), container);
-
 }
-
 
 /**
  * Create array, and return its snapshot
  * @return pyobject of Awkward Array
  */
-py::object create_awkward_array(std::string binary_data) {
-    std::ifstream infile(binary_data, std::ifstream::binary);
+py::object load(std::string file_path) {
+    std::ifstream infile(file_path, std::ifstream::binary);
     kaitai::kstream ks(&infile);
     animal_t zoo = animal_t(&ks);
     return snapshot_builder(zoo.animal_builder);
 }
 
-
-PYBIND11_MODULE(awkward_kaitai, m) {
-    m.doc() = "pybind11 plugin"; // optional module docstring
-    m.def("create_awkward_array", &create_awkward_array, "A function that creates an awkward array");
+PYBIND11_MODULE(awkward_animal, m) {
+    m.def("load", &load);
 }

@@ -4,7 +4,8 @@ project(${SKBUILD_PROJECT_NAME} LANGUAGES CXX)
 set(PYBIND11_FINDPYTHON ON)
 find_package(pybind11 CONFIG REQUIRED)
 
-option(KSY_FILE "Specify the KSY file to use" "")
+option(KSY "Specify the KSY file to use" "")
+option(PACKAGE_NAME "Specify the package name (awkward_ + KSY_NAME)" "")
 
 add_subdirectory(kaitai_struct_cpp_stl_runtime)
 
@@ -20,6 +21,7 @@ set (MAIN_SOURCES
 
 add_library (${SKBUILD_PROJECT_NAME} SHARED ${MAIN_HEADERS} ${MAIN_SOURCES})
 
+# Download awkward headers
 include(FetchContent)
 set(AWKWARD_VERSION "v2.4.3")
 FetchContent_Declare(
@@ -40,12 +42,12 @@ execute_process(
 )
 
 execute_process(
-    COMMAND ./kaitai-struct-compiler -t awkward --outdir src-kaitai-awkward ${KSY_FILE}
+    COMMAND ./kaitai-struct-compiler -t awkward --outdir src-${PACKAGE_NAME} ${KSY} 
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
-pybind11_add_module(awkward_kaitai src/main.cpp)
-target_link_libraries(awkward_kaitai PRIVATE awkward::layout-builder)
+pybind11_add_module(${PACKAGE_NAME} src-${PACKAGE_NAME}/main.cpp) 
+target_link_libraries(${PACKAGE_NAME} PRIVATE awkward::layout-builder)
 
 # Install into wheel
-install(TARGETS awkward_kaitai DESTINATION .)
+install(TARGETS ${PACKAGE_NAME} DESTINATION .)
