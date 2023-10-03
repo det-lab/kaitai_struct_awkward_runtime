@@ -4,6 +4,8 @@ project(${SKBUILD_PROJECT_NAME} LANGUAGES CXX)
 set(PYBIND11_FINDPYTHON ON)
 find_package(pybind11 CONFIG REQUIRED)
 
+option(KSY_FILE "Specify the KSY file to use" "")
+
 add_subdirectory(kaitai_struct_cpp_stl_runtime)
 
 set (MAIN_HEADERS
@@ -32,7 +34,6 @@ if(NOT awkward-headers_POPULATED)
 endif()
 
 # Run sbt package command to compile kaitai_struct_compiler code
-
 execute_process(
     COMMAND sbt package
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/kaitai_awkward_runtime/kaitai_struct_compiler
