@@ -10,20 +10,21 @@ Steps for reproducing the environment:
 git clone --recursive https://github.com/ManasviGoyal/kaitai_awkward_runtime.git
 ```
 
-2. Change directory to `kaitai_awkward_runtime` and run Cmake
+2. Change directory to `kaitai_awkward_runtime` and run CMake:
 ```
 cd kaitai_awkward_runtime
 cmake -B build -DKSY=schemas/animal.ksy -DPACKAGE_NAME=awkward_animal
 ```
 
-3. Install the library
+3. Install the library and open Python:
 ```
 pip install .
+python
 ```
 
-4. Print the returned `ak.Array`
+4. Print the returned `ak.Array`:
 ```python
 from awkward_animal import load
-print(create_awkward_array("../data/animal.raw"))
+print(load("../data/animal.raw"))
 ```
 
