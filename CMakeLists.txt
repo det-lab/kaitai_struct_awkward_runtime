@@ -7,12 +7,12 @@ set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
 string(REGEX MATCH "([^/]+)$" package_name ${KSY})
 string(REGEX REPLACE "\\.ksy$" "" package_name ${package_name})
 set(PACKAGE_NAME ${package_name})
-set(CMAKE_ARGS "-DPACKAGE_NAME=${PACKAGE_NAME}")
+# set(CMAKE_ARGS "-DPACKAGE_NAME=${PACKAGE_NAME}")
 
 set(BUILD_SHARED_LIBS OFF)
 set(BUILD_STATIC_LIBS ON)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 
-set(PYBIND11_FINDPYTHON ON)
 find_package(pybind11 CONFIG REQUIRED)
 
 add_subdirectory(kaitai_struct_cpp_stl_runtime)
@@ -58,14 +58,10 @@ execute_process(
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
 )
 
-execute_process(
-    COMMAND echo ${PACKAGE_NAME}
-)
-
-pybind11_add_module(${PACKAGE_NAME} src-${PACKAGE_NAME}/${PACKAGE_NAME}_main.cpp) 
-target_link_libraries(${PACKAGE_NAME} PRIVATE awkward::layout-builder)
-target_include_directories(${PACKAGE_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/kaitai_struct_cpp_stl_runtime)
-target_link_libraries(${PACKAGE_NAME} PRIVATE kaitai_struct_cpp_stl_runtime)
+pybind11_add_module(awkward_${PACKAGE_NAME} src-${PACKAGE_NAME}/${PACKAGE_NAME}_main.cpp src-${PACKAGE_NAME}/${PACKAGE_NAME}.cpp) 
+target_link_libraries(awkward_${PACKAGE_NAME} PRIVATE awkward::layout-builder)
+target_include_directories(awkward_${PACKAGE_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/kaitai_struct_cpp_stl_runtime)
+target_link_libraries(awkward_${PACKAGE_NAME} PUBLIC kaitai_struct_cpp_stl_runtime)
 
 # Install into wheel
-install(TARGETS ${PACKAGE_NAME} DESTINATION .)
+install(TARGETS awkward_${PACKAGE_NAME} DESTINATION .)
