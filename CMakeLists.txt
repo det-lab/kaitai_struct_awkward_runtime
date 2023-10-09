@@ -45,6 +45,13 @@ execute_process(
 string(REGEX MATCH "([^/]+)$" KSY_MODULE ${KSY})
 string(REGEX REPLACE "\\.ksy$" "" KSY_MODULE ${KSY_MODULE})
 
+# Specialise the name of the KSY file
+configure_file (
+    "${PROJECT_SOURCE_DIR}/configure/__init__.py.in"
+    "${PROJECT_BINARY_DIR}/${SKBUILD_PROJECT_NAME}/__init__.py"
+)
+
+
 pybind11_add_module(awkward_${KSY_MODULE} src-${SKBUILD_PROJECT_NAME}/${KSY_MODULE}_main.cpp src-${SKBUILD_PROJECT_NAME}/${KSY_MODULE}.cpp) 
 target_link_libraries(awkward_${KSY_MODULE} PRIVATE awkward::layout-builder kaitai_struct_cpp_stl_runtime)
 
@@ -58,3 +65,6 @@ install(
   ARCHIVE DESTINATION "${SKBUILD_PROJECT_NAME}/lib")
 
 install(FILES ${PYTHON_SOURCES} DESTINATION ${SKBUILD_PROJECT_NAME})
+
+# Install custom __init__.py
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${SKBUILD_PROJECT_NAME}/__init__.py DESTINATION ${SKBUILD_PROJECT_NAME})
