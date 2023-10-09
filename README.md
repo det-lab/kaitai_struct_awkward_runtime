@@ -17,7 +17,7 @@ cd kaitai_awkward_runtime
 
 3. Install the library, and open Python:
 ```
-pip install .    
+pip install . --config-settings 'cmake.define.KSY=schemas/animal.ksy'   
 python
 ```
 
