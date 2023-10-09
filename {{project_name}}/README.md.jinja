@@ -1,0 +1,33 @@
+# {{ project_name }}
+
+An Awkward Array interface for the {{ schema_name }} Katai Structu interface.
+
+Steps for reproducing the environment:
+
+1. Clone `{{ project_name }}` repository:
+```
+git clone --recursive https://github.com/{{ org }}/{{ project_name }}.git
+```
+
+2. Change directory to `{{ project_name }}`:
+```
+cd {{ project)name }}
+```
+<!--- if we want to set up the package_name as ksy name we can just skip the PACKAGE_NAME argument -->
+
+3. Install the library, and open Python:
+```
+pip install .    
+python
+```
+
+4. Print the returned `ak.Array`:
+```python
+import {{ module_name }}
+awkward_array = {{ module_name }}.load("data/some-data.raw")
+print(awkward_array)
+```
+
+
+> **Info**
+> `{{ project_name }}` depends upon `sbt`, and `gtest` dependencies.
