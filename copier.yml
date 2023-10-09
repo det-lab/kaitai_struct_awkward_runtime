@@ -1,4 +1,7 @@
 # questions
+_exclude:
+    - module-name
+
 project_name:
   type: str
   help: The name of your project
