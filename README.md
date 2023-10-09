@@ -25,8 +25,8 @@ python
 
 4. Print the returned `ak.Array`:
 ```python
-import animal
-awkward_array = animal.load("../data/animal.raw")
+import awkward_animal
+awkward_array = awkward_animal.load("../data/animal.raw")
 print(awkward_array)
 ```
 
