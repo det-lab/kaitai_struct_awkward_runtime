@@ -28,8 +28,6 @@ if(NOT awkward-headers_POPULATED)
   add_subdirectory(${awkward-headers_SOURCE_DIR} ${awkward-headers_BINARY_DIR} EXCLUDE_FROM_ALL)
 endif()
 
-MESSAGE(WARNING "${CMAKE_SOURCE_DIR}/kaitai_struct_compiler")
-
 # Run sbt package command to compile kaitai_struct_compiler code
 execute_process(
     COMMAND sbt package
