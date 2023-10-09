@@ -46,3 +46,8 @@ module_name:
 schema_name:
   type: str
   help: Then name of your KSY file to be added to "schemas/"
+
+version:
+  type: str
+  help: The initial project version
+  default: 1.0.0
