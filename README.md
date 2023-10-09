@@ -10,16 +10,15 @@ Steps for reproducing the environment:
 git clone --recursive https://github.com/ManasviGoyal/kaitai_awkward_runtime.git
 ```
 
-2. Change directory to `kaitai_awkward_runtime` and run CMake:
+2. Change directory to `kaitai_awkward_runtime`:
 ```
 cd kaitai_awkward_runtime
-export CMAKE_ARGS="-DKSY=schemas/animal.ksy -DBUILD_SHARED_LIBS=OFF -DBUILD_STATIC_LIBS=ON"
 ```
 <!--- if we want to set up the package_name as ksy name we can just skip the PACKAGE_NAME argument -->
 
-3. Install the library and open Python:
+3. Install the library, specifying the schema, and open Python:
 ```
-pip install .
+pip install . --config-settings 'cmake.define.KSY=schemas/animal.ksy'      
 python
 ```
 
