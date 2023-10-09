@@ -1,18 +1,19 @@
 cmake_minimum_required(VERSION 3.19...3.26)
-project(kaitai_awkward_runtime CXX)
+project(${SKBUILD_PROJECT_NAME} CXX)
 
 set(KSY "" CACHE STRING "Specify the KSY file path")
-
-string(REGEX MATCH "([^/]+)$" package_name ${KSY})
-string(REGEX REPLACE "\\.ksy$" "" package_name ${package_name})
-set(PACKAGE_NAME ${package_name})
-
 set(BUILD_SHARED_LIBS ON)
-set(BUILD_STATIC_LIBS OFF)
 
 find_package(pybind11 CONFIG REQUIRED)
 
-add_subdirectory(kaitai_struct_cpp_stl_runtime)
+# Setup the RPATH for built libraries
+if(APPLE)
+  set(CMAKE_INSTALL_RPATH "@loader_path")
+else()
+  SET(CMAKE_INSTALL_RPATH "$ORIGIN")
+endif()
+
+add_subdirectory(kaitai_struct_cpp_stl_runtime EXCLUDE_FROM_ALL)
 
 # Download awkward headers
 include(FetchContent)
@@ -36,13 +37,24 @@ execute_process(
 )
 
 execute_process(
-    COMMAND ./kaitai-struct-compiler -t awkward --outdir src-${PACKAGE_NAME} ${KSY} #package name should be declared as a string
+    COMMAND ./kaitai-struct-compiler -t awkward --outdir src-${SKBUILD_PROJECT_NAME} ${KSY} #package name should be declared as a string
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
     COMMAND_ERROR_IS_FATAL ANY
 )
 
-pybind11_add_module(awkward_${PACKAGE_NAME} src-${PACKAGE_NAME}/${PACKAGE_NAME}_main.cpp src-${PACKAGE_NAME}/${PACKAGE_NAME}.cpp) 
-target_link_libraries(awkward_${PACKAGE_NAME} PRIVATE awkward::layout-builder kaitai_struct_cpp_stl_runtime)
+string(REGEX MATCH "([^/]+)$" KSY_MODULE ${KSY})
+string(REGEX REPLACE "\\.ksy$" "" KSY_MODULE ${KSY_MODULE})
 
-# Install into wheel
-install(TARGETS awkward_${PACKAGE_NAME} DESTINATION .)
+pybind11_add_module(awkward_${KSY_MODULE} src-${SKBUILD_PROJECT_NAME}/${KSY_MODULE}_main.cpp src-${SKBUILD_PROJECT_NAME}/${KSY_MODULE}.cpp) 
+target_link_libraries(awkward_${KSY_MODULE} PRIVATE awkward::layout-builder kaitai_struct_cpp_stl_runtime)
+
+# Install pure-python files
+file(GLOB_RECURSE PYTHON_SOURCES "src/${SKBUILD_PROJECT_NAME}/*.py")
+
+install(
+  TARGETS awkward_${KSY_MODULE} kaitai_struct_cpp_stl_runtime
+  LIBRARY DESTINATION "${SKBUILD_PROJECT_NAME}/lib"
+  RUNTIME DESTINATION "${SKBUILD_PROJECT_NAME}/lib"
+  ARCHIVE DESTINATION "${SKBUILD_PROJECT_NAME}/lib")
+
+install(FILES ${PYTHON_SOURCES} DESTINATION ${SKBUILD_PROJECT_NAME})

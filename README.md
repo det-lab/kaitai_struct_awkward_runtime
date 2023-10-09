@@ -1,6 +1,5 @@
 # kaitai_awkward_runtime
 
-# awkward-kaitai
 Building Awkward Arrays using Kaitai binary file descriptors.
 
 Steps for reproducing the environment:
@@ -16,9 +15,9 @@ cd kaitai_awkward_runtime
 ```
 <!--- if we want to set up the package_name as ksy name we can just skip the PACKAGE_NAME argument -->
 
-3. Install the library, specifying the schema, and open Python:
+3. Install the library, and open Python:
 ```
-pip install . --config-settings 'cmake.define.KSY=schemas/animal.ksy'      
+pip install .    
 python
 ```
 
@@ -29,3 +28,6 @@ awkward_array = awkward_animal.load("data/animal.raw")
 print(awkward_array)
 ```
 
+
+> **Info**
+> `kaitai_awkward_runtime` depends upon `sbt`, and `gtest` dependencies.
