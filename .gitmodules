@@ -1,7 +1,7 @@
 [submodule "kaitai_struct_cpp_stl_runtime"]
-	path = kaitai_struct_cpp_stl_runtime
+	path = {{project_name}}/kaitai_struct_cpp_stl_runtime
 	url = https://github.com/kaitai-io/kaitai_struct_cpp_stl_runtime.git
 [submodule "kaitai_struct_compiler"]
-	path = kaitai_struct_compiler
+	path = {{project_name}}/kaitai_struct_compiler
 	url = https://github.com/ManasviGoyal/kaitai_struct_compiler.git
 	branch = ManasviGoyal/kaitai_awkward_target
