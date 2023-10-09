@@ -23,8 +23,8 @@ python
 
 4. Print the returned `ak.Array`:
 ```python
-import {{ module_name }}
-awkward_array = {{ module_name }}.load("data/some-data.raw")
+from {% include 'module-name.jinja' %} import load
+awkward_array = load("data/some-data.raw")
 print(awkward_array)
 ```
 

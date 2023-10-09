@@ -38,11 +38,6 @@ project_short_description:
   help: A short description of your project
   default: A great package.
   
-module_name:
-  type: str
-  help: The name of your Python module (for importing)
-  default: "{{ project_name.lower().replace('-', '_') }}"
-
 schema_name:
   type: str
   help: Then name of your KSY file to be added to "schemas/"
