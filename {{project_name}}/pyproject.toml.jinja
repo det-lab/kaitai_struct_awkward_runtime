@@ -7,7 +7,7 @@ build-backend = "scikit_build_core.build"
 name = "{{ project_name }}"
 description = "Awkward Array interface for {{ schema_name }}"
 authors = [
-  "{{ full_name }} <{{ email }}>",
+  { name = "{{ full_name }}", email = "{{ email }}" },
 ]
 readme = "README.md"
 requires-python = ">=3.8"
