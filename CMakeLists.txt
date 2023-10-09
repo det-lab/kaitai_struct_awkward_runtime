@@ -1,33 +1,19 @@
-cmake_minimum_required(VERSION 3.15...3.26)
-project(kaitai_awkward_runtime CXX)
+cmake_minimum_required(VERSION 3.19...3.26)
+project(${SKBUILD_PROJECT_NAME} CXX)
 
 set(KSY "" CACHE STRING "Specify the KSY file path")
-set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
-
-string(REGEX MATCH "([^/]+)$" package_name ${KSY})
-string(REGEX REPLACE "\\.ksy$" "" package_name ${package_name})
-set(PACKAGE_NAME ${package_name})
-# set(CMAKE_ARGS "-DPACKAGE_NAME=${PACKAGE_NAME}")
-
-set(BUILD_SHARED_LIBS OFF)
-set(BUILD_STATIC_LIBS ON)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+set(BUILD_SHARED_LIBS ON)
 
 find_package(pybind11 CONFIG REQUIRED)
 
-add_subdirectory(kaitai_struct_cpp_stl_runtime)
+# Setup the RPATH for built libraries
+if(APPLE)
+  set(CMAKE_INSTALL_RPATH "@loader_path")
+else()
+  SET(CMAKE_INSTALL_RPATH "$ORIGIN")
+endif()
 
-set (MAIN_HEADERS
-    kaitai_struct_cpp_stl_runtime/kaitai/kaitaistream.h
-    kaitai_struct_cpp_stl_runtime/kaitai/kaitaistruct.h
-    kaitai_struct_cpp_stl_runtime/kaitai/exceptions.h
-)
-
-set (MAIN_SOURCES
-    kaitai_struct_cpp_stl_runtime/kaitai/kaitaistream.cpp
-)
-
-add_library (${PROJECT_NAME} ${MAIN_HEADERS} ${MAIN_SOURCES})
+add_subdirectory(kaitai_struct_cpp_stl_runtime EXCLUDE_FROM_ALL)
 
 # Download awkward headers
 include(FetchContent)
@@ -43,25 +29,32 @@ if(NOT awkward-headers_POPULATED)
   add_subdirectory(${awkward-headers_SOURCE_DIR} ${awkward-headers_BINARY_DIR} EXCLUDE_FROM_ALL)
 endif()
 
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_BINARY_DIR}/_deps/awkward-headers-src/layout-builder)
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_BINARY_DIR}/_deps/awkward-headers-src/builder-options)
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_BINARY_DIR}/_deps/awkward-headers-src/growable-buffer)
-
 # Run sbt package command to compile kaitai_struct_compiler code
 execute_process(
     COMMAND sbt package
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/kaitai_struct_compiler
+    COMMAND_ERROR_IS_FATAL ANY
 )
 
 execute_process(
-    COMMAND ./kaitai-struct-compiler -t awkward --outdir src-${PACKAGE_NAME} ${KSY} #package name should be declared as a string
+    COMMAND ./kaitai-struct-compiler -t awkward --outdir src-${SKBUILD_PROJECT_NAME} ${KSY} #package name should be declared as a string
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    COMMAND_ERROR_IS_FATAL ANY
 )
 
-pybind11_add_module(awkward_${PACKAGE_NAME} src-${PACKAGE_NAME}/${PACKAGE_NAME}_main.cpp src-${PACKAGE_NAME}/${PACKAGE_NAME}.cpp) 
-target_link_libraries(awkward_${PACKAGE_NAME} PRIVATE awkward::layout-builder)
-target_include_directories(awkward_${PACKAGE_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/kaitai_struct_cpp_stl_runtime)
-target_link_libraries(awkward_${PACKAGE_NAME} PUBLIC kaitai_struct_cpp_stl_runtime)
+string(REGEX MATCH "([^/]+)$" KSY_MODULE ${KSY})
+string(REGEX REPLACE "\\.ksy$" "" KSY_MODULE ${KSY_MODULE})
 
-# Install into wheel
-install(TARGETS awkward_${PACKAGE_NAME} DESTINATION .)
+pybind11_add_module(awkward_${KSY_MODULE} src-${SKBUILD_PROJECT_NAME}/${KSY_MODULE}_main.cpp src-${SKBUILD_PROJECT_NAME}/${KSY_MODULE}.cpp) 
+target_link_libraries(awkward_${KSY_MODULE} PRIVATE awkward::layout-builder kaitai_struct_cpp_stl_runtime)
+
+# Install pure-python files
+file(GLOB_RECURSE PYTHON_SOURCES "src/${SKBUILD_PROJECT_NAME}/*.py")
+
+install(
+  TARGETS awkward_${KSY_MODULE} kaitai_struct_cpp_stl_runtime
+  LIBRARY DESTINATION "${SKBUILD_PROJECT_NAME}/lib"
+  RUNTIME DESTINATION "${SKBUILD_PROJECT_NAME}/lib"
+  ARCHIVE DESTINATION "${SKBUILD_PROJECT_NAME}/lib")
+
+install(FILES ${PYTHON_SOURCES} DESTINATION ${SKBUILD_PROJECT_NAME})

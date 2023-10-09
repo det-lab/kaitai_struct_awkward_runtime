@@ -29,7 +29,9 @@ classifiers = [
   "Typing :: Typed",
 ]
 dynamic = ["version"]
-dependencies = []
+dependencies = [
+    "awkward>2.4.3"
+]
 
 [project.optional-dependencies]
 test = [
@@ -50,10 +52,8 @@ docs = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/org/kaitai_awkward_runtime"
-"Bug Tracker" = "https://github.com/org/kaitai_awkward_runtime/issues"
-Discussions = "https://github.com/org/kaitai_awkward_runtime/discussions"
-Changelog = "https://github.com/org/kaitai_awkward_runtime/releases"
+Homepage = "https://github.com/ManasviGoyal/kaitai_awkward_runtime"
+"Bug Tracker" = "https://github.com/ManasviGoyal/kaitai_awkward_runtime/issues"
 
 
 [tool.scikit-build]
@@ -61,6 +61,12 @@ minimum-version = "0.4"
 build-dir = "build/{wheel_tag}"
 metadata.version.provider = "scikit_build_core.metadata.setuptools_scm"
 sdist.include = ["src/kaitai_awkward_runtime/_version.py"]
+cmake.verbose = true
+logging.level = "INFO"
+cmake.build-type = "Debug"
+
+[tool.scikit-build.cmake.define]
+KSY = "schemas/animal.ksy"
 
 
 [tool.setuptools_scm]
