@@ -6,11 +6,9 @@ set(KSY "" CACHE STRING "Specify the KSY file path")
 string(REGEX MATCH "([^/]+)$" package_name ${KSY})
 string(REGEX REPLACE "\\.ksy$" "" package_name ${package_name})
 set(PACKAGE_NAME ${package_name})
-# set(CMAKE_ARGS "-DPACKAGE_NAME=${PACKAGE_NAME}")
 
 set(BUILD_SHARED_LIBS ON)
 set(BUILD_STATIC_LIBS OFF)
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 
 find_package(pybind11 CONFIG REQUIRED)
 
