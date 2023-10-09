@@ -9,25 +9,13 @@ string(REGEX REPLACE "\\.ksy$" "" package_name ${package_name})
 set(PACKAGE_NAME ${package_name})
 # set(CMAKE_ARGS "-DPACKAGE_NAME=${PACKAGE_NAME}")
 
-set(BUILD_SHARED_LIBS OFF)
-set(BUILD_STATIC_LIBS ON)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+set(BUILD_SHARED_LIBS ON)
+set(BUILD_STATIC_LIBS OFF)
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 
 find_package(pybind11 CONFIG REQUIRED)
 
 add_subdirectory(kaitai_struct_cpp_stl_runtime)
-
-set (MAIN_HEADERS
-    kaitai_struct_cpp_stl_runtime/kaitai/kaitaistream.h
-    kaitai_struct_cpp_stl_runtime/kaitai/kaitaistruct.h
-    kaitai_struct_cpp_stl_runtime/kaitai/exceptions.h
-)
-
-set (MAIN_SOURCES
-    kaitai_struct_cpp_stl_runtime/kaitai/kaitaistream.cpp
-)
-
-add_library (${PROJECT_NAME} ${MAIN_HEADERS} ${MAIN_SOURCES})
 
 # Download awkward headers
 include(FetchContent)
@@ -43,25 +31,23 @@ if(NOT awkward-headers_POPULATED)
   add_subdirectory(${awkward-headers_SOURCE_DIR} ${awkward-headers_BINARY_DIR} EXCLUDE_FROM_ALL)
 endif()
 
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_BINARY_DIR}/_deps/awkward-headers-src/layout-builder)
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_BINARY_DIR}/_deps/awkward-headers-src/builder-options)
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_BINARY_DIR}/_deps/awkward-headers-src/growable-buffer)
+MESSAGE(WARNING "${CMAKE_SOURCE_DIR}/kaitai_struct_compiler")
 
 # Run sbt package command to compile kaitai_struct_compiler code
 execute_process(
     COMMAND sbt package
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/kaitai_struct_compiler
+    COMMAND_ERROR_IS_FATAL ANY
 )
 
 execute_process(
     COMMAND ./kaitai-struct-compiler -t awkward --outdir src-${PACKAGE_NAME} ${KSY} #package name should be declared as a string
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+    COMMAND_ERROR_IS_FATAL ANY
 )
 
 pybind11_add_module(awkward_${PACKAGE_NAME} src-${PACKAGE_NAME}/${PACKAGE_NAME}_main.cpp src-${PACKAGE_NAME}/${PACKAGE_NAME}.cpp) 
-target_link_libraries(awkward_${PACKAGE_NAME} PRIVATE awkward::layout-builder)
-target_include_directories(awkward_${PACKAGE_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/kaitai_struct_cpp_stl_runtime)
-target_link_libraries(awkward_${PACKAGE_NAME} PUBLIC kaitai_struct_cpp_stl_runtime)
+target_link_libraries(awkward_${PACKAGE_NAME} PRIVATE awkward::layout-builder PUBLIC kaitai_struct_cpp_stl_runtime)
 
 # Install into wheel
 install(TARGETS awkward_${PACKAGE_NAME} DESTINATION .)
