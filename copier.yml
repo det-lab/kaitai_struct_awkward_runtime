@@ -12,13 +12,6 @@ project_name:
   validator: >-
     {% if not project_name %} You must provide a name for the project. {% endif  %}
 
-org:
-  type: str
-  help: The name of your (GitHub?) org
-  validator: >-
-    {% if not org %} You must provide a org for the project. It might just be
-    your user name on the site (like GitHub) you are targeting. {% endif %}
-
 url:
   type: str
   help: The url to your GitHub or GitLab repository

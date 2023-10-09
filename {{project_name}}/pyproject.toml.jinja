@@ -6,6 +6,9 @@ build-backend = "scikit_build_core.build"
 [project]
 name = "{{ project_name }}"
 description = "Awkward Array interface for {{ schema_name }}"
+authors = [
+  "{{ full_name }} <{{ email }}>",
+]
 readme = "README.md"
 requires-python = ">=3.8"
 classifiers = [
@@ -29,6 +32,10 @@ dynamic = ["version"]
 dependencies = [
     "awkward>2.4.3"
 ]
+
+[project.urls]
+homepage = "{{ url }}"
+repository = "{{ url }}"
 
 
 [tool.scikit-build]
