@@ -44,7 +44,7 @@ execute_process(
 )
 
 pybind11_add_module(awkward_${PACKAGE_NAME} src-${PACKAGE_NAME}/${PACKAGE_NAME}_main.cpp src-${PACKAGE_NAME}/${PACKAGE_NAME}.cpp) 
-target_link_libraries(awkward_${PACKAGE_NAME} PRIVATE awkward::layout-builder PUBLIC kaitai_struct_cpp_stl_runtime)
+target_link_libraries(awkward_${PACKAGE_NAME} PRIVATE awkward::layout-builder kaitai_struct_cpp_stl_runtime)
 
 # Install into wheel
 install(TARGETS awkward_${PACKAGE_NAME} DESTINATION .)
