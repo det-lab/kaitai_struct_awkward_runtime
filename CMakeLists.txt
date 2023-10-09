@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.15...3.26)
 project(kaitai_awkward_runtime CXX)
 
 set(KSY "" CACHE STRING "Specify the KSY file path")
-set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
 
 string(REGEX MATCH "([^/]+)$" package_name ${KSY})
 string(REGEX REPLACE "\\.ksy$" "" package_name ${package_name})
