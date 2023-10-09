@@ -67,9 +67,6 @@ cmake.verbose = true
 logging.level = "INFO"
 cmake.build-type = "Debug"
 
-[tool.scikit-build.cmake.define]
-KSY = "schemas/animal.ksy"
-
 
 [tool.setuptools_scm]
 write_to = "src/kaitai_awkward_runtime/_version.py"
