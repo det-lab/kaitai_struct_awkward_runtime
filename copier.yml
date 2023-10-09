@@ -2,6 +2,10 @@
 _exclude:
     - module-name
 
+_envops:
+  keep_trailing_newline: false
+  
+
 project_name:
   type: str
   help: The name of your project
