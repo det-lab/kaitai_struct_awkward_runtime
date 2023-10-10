@@ -23,8 +23,8 @@ python
 
 4. Print the returned `ak.Array`:
 ```python
-import awkward_animal
-awkward_array = awkward_animal.load("data/animal.raw")
+import kaitai_awkward_runtime
+awkward_array = kaitai_awkward_runtime.load("data/animal.raw")
 print(awkward_array)
 ```
 
