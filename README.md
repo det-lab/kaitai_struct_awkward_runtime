@@ -15,7 +15,7 @@ cd kaitai_awkward_runtime
 ```
 <!--- if we want to set up the package_name as ksy name we can just skip the PACKAGE_NAME argument -->
 
-3. Install the library, and open Python:
+3. Install the library (requires `pip>=23.1`) , and open Python:
 ```
 pip install . --config-settings 'cmake.define.KSY=schemas/animal.ksy'   
 python
