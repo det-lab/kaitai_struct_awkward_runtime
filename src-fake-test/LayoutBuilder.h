@@ -19,53 +19,6 @@
 
 namespace {
 
-template <class NODE, class PRIMITIVE, class LENGTH>
-void dump(std::ostringstream& out, NODE&& node, PRIMITIVE&& ptr, LENGTH&& length) {
-  out << node << ": ";
-  for (size_t i = 0; i < length; i++) {
-    out << +ptr[i] << " ";
-  }
-  out << std::endl;
-}
-
-template<class NODE, class PRIMITIVE, class LENGTH, class ... Args>
-void dump(std::ostringstream& out, NODE&& node, PRIMITIVE&& ptr, LENGTH&& length, Args&&...args)
-{
-    dump(out, node, ptr, length);
-    dump(out, args...);
-}
-
-std::map<std::string, void*>
-inline empty_buffers(std::map<std::string, size_t> &names_nbytes) {
-  std::map<std::string, void*> buffers = {};
-  for(const auto& it : names_nbytes) {
-    auto* ptr = new uint8_t[it.second];
-    buffers[it.first] = (void*)ptr;
-  }
-  return buffers;
-}
-
-  /// @brief Helper function to retrieve the buffers.
-  template<typename LayoutBuilder>
-  std::vector<uint8_t*> to_buffer_helper(const LayoutBuilder* builder) {
-    std::map <std::string, size_t> names_nbytes = {};
-    std::vector <uint8_t*> buffer_array;
-    builder->buffer_nbytes(names_nbytes);
-
-    std::map<std::string, void *> buffers = {};
-    for (auto it: names_nbytes) {
-        uint8_t *ptr = new uint8_t[it.second];
-        buffers[it.first] = (void *) ptr;
-    }
-
-    builder->to_buffers(buffers);
-
-    for (auto it: buffers) {
-      buffer_array.push_back(reinterpret_cast<uint8_t*>(it.second));
-    }
-    return buffer_array;
-  }
-
   /// @brief Helper function to retrieve the names of the buffers.
   template<typename LayoutBuilder>
   std::vector<std::string> buffer_name_helper(const LayoutBuilder* builder) {
@@ -270,7 +223,7 @@ namespace awkward {
         }
       }
 
-    // private:
+    private:
       /// @brief Buffer of `PRIMITIVE` type.
       awkward::GrowableBuffer<PRIMITIVE> data_;
 

@@ -150,8 +150,6 @@ namespace awkward {
       if (next_) {
         next_->concatenate_to(to_ptr, offset + length_);
       }
-      for(int i = 0; i < 10; i++)
-        std::cout << ptr_[i] << "  ";
     }
 
     /// @brief Fills (one panel) GrowableBuffer<TO_PRIMITIVE> with the

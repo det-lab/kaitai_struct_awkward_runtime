@@ -2,8 +2,6 @@ import ctypes
 import numpy as np
 import awkward as ak
 
-print("start")
-
 class Reader:
     def __init__(self, library_path):
         self.library_path = library_path
@@ -46,9 +44,6 @@ class Reader:
         deallocate = self.lib.deallocate
         deallocate.argtypes = [ctypes.c_void_p]
 
-        dump = self.lib.dump
-        dump.argtypes = [ctypes.c_void_p, ctypes.c_int64]
-
         result = fill(file_path.encode('utf-8'))
 
         builder_form = form(result).decode("utf-8")
@@ -63,8 +58,6 @@ class Reader:
                 containers[name.decode('utf-8')] = np.empty(size, dtype=np.uint8)
                 pointer, read_only_flag = containers[name.decode('utf-8')].__array_interface__['data']
                 copy_into(ctypes.c_char_p(name), result, pointer, i)
-            print(containers)
-
         finally:
             deallocate(result)
     

@@ -106,15 +106,6 @@ extern "C" {
     return result;
   }
 
-  void dump(void * buffer, int64_t size) {
-
-    uint8_t* data = reinterpret_cast<uint8_t*>(buffer);
-    for(int i = 0; i < size; i++) {
-      printf("%ld", (int64_t)(data[i]));
-    }
-    // LayoutBuilder* builder1 = reinterpret_cast<LayoutBuilder*>(builder);
-  }
-
   const char* form(void* builder) {
     return strdup(reinterpret_cast<LayoutBuilder*>(builder)->form().c_str());
   }
@@ -136,11 +127,7 @@ extern "C" {
   }
 
   void copy_into(const char* name, void* from_builder, void* to_buffer, int64_t index) {
-    printf("printing copy_into function\n");
-    // printf("%s", name);
     reinterpret_cast<LayoutBuilder*>(from_builder)->to_buffer(to_buffer, name);
-    // dump(to_buffer, buffer_size(from_builder, index));
-    printf("done copy_into function\n");
   }
 
   void deallocate(void* builder) {

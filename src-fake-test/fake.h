@@ -10,32 +10,6 @@
 #include <fstream>
 #include <iostream>
 
-template <class NODE, class PRIMITIVE, class LENGTH>
-void dump(std::ostringstream& out, NODE&& node, PRIMITIVE&& ptr, LENGTH&& length) {
-  out << node << ": ";
-  for (size_t i = 0; i < length; i++) {
-    out << +ptr[i] << " ";
-  }
-  out << std::endl;
-}
-
-template<class NODE, class PRIMITIVE, class LENGTH, class ... Args>
-void dump(std::ostringstream& out, NODE&& node, PRIMITIVE&& ptr, LENGTH&& length, Args&&...args)
-{
-    dump(out, node, ptr, length);
-    dump(out, args...);
-}
-
-std::map<std::string, void*>
-inline empty_buffers(std::map<std::string, size_t> &names_nbytes) {
-  std::map<std::string, void*> buffers = {};
-  for(const auto& it : names_nbytes) {
-    auto* ptr = new uint8_t[it.second];
-    buffers[it.first] = (void*)ptr;
-  }
-  return buffers;
-}
-
 using UserDefinedMap = std::map<std::size_t, std::string>;
 template<class... BUILDERS>
 using RecordBuilder = awkward::LayoutBuilder::Record<UserDefinedMap, BUILDERS...>;
@@ -133,30 +107,8 @@ std::map<std::string, LayoutBuilder*> builderMap;
 LayoutBuilder* load(std::string file_path) {
     std::ifstream infile(file_path, std::ifstream::binary);
     kaitai::kstream ks(&infile);
-    
     fake_t* obj = new fake_t(&ks);
-
-    builderMap[file_path] = &(obj->fake_builder);
-    std::map<std::string, void*> buffers = {};
-    std::map <std::string, size_t> names_nbytes = {};
-
-    builderMap[file_path]->buffer_nbytes(names_nbytes);
-
-    for (auto it: names_nbytes) {
-        uint8_t *ptr = new uint8_t[it.second];
-        buffers[it.first] = (void *) ptr; 
-    }
-
-    builderMap[file_path]->to_buffers(buffers);
-    
-    for(auto it: names_nbytes) {
-        std::cout << "printing buffer " << it.first << " and size " << it.second;
-        uint8_t* data = reinterpret_cast<uint8_t*>(buffers[it.first]);
-        std::cout << "data from builder" << std::endl;
-        for(int i = 0; i < it.second; i++)
-            std::cout << data[i] * 1 << " ";
-        std::cout << std::endl;
-    }
+    builderMap[file_path] = &(obj->fake_builder);  
     return builderMap[file_path];
 }
 
