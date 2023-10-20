@@ -2,6 +2,8 @@ import ctypes
 import numpy as np
 import awkward as ak
 
+print("start")
+
 class Reader:
     def __init__(self, library_path):
         self.library_path = library_path
@@ -57,21 +59,18 @@ class Reader:
         try:
             for i in range(num_buffers):
                 name = buffer_name(result, i)
-                print(name)
                 size = buffer_size(result, i)
                 containers[name.decode('utf-8')] = np.empty(size, dtype=np.uint8)
                 pointer, read_only_flag = containers[name.decode('utf-8')].__array_interface__['data']
-                # dump(containers[name].ctypes.data_as(ctypes.POINTER(ctypes.c_void_p)), size)
                 copy_into(ctypes.c_char_p(name), result, pointer, i)
-                print(name)
             print(containers)
 
         finally:
             deallocate(result)
     
         return ak.from_buffers(builder_form, builder_length, containers)
-
+    
 fake = Reader("./libfake.so")
-array =  fake.load("data/fake.raw")
+array =  fake.load("example_data/data/fake.raw")
 
 print(array)
