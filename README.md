@@ -1,33 +1,73 @@
-# kaitai_awkward_runtime
+# Kaitai Struct: runtime library for Awkward
 
-Building Awkward Arrays using Kaitai binary file descriptors.
+This library building Awkward Arrays using Kaitai Struct API for Awkward using C++/STL.
 
-Steps for reproducing the environment:
+## Steps
 
-1. Clone `kaitai_awkward_runtime` repository:
+### 1. Write a .ksy file for your custom file format. Refer to the [Kaitai User Guide](https://doc.kaitai.io/user_guide.html) for more details.
+Here, we take an example of `animal.ksy`
+```yaml
+meta:
+  id: animal
+  endian: le
+  license: CC0-1.0
+  ks-version: 0.8
+
+seq:
+
+  - id: entry
+    type: animal_entry
+    repeat: eos
+
+types:
+
+  animal_entry:
+    seq:
+      - id: str_len
+        type: u1
+
+      - id: species
+        type: str
+        size: str_len
+        encoding: UTF-8
+
+      - id: age
+        type: u1
+
+      - id: weight
+        type: u2
+```
+
+### 2. Get `kaitai-struct-compiler` from source.
+
+### 3. Clone `kaitai_awkward_runtime` repository:
 ```
 git clone --recursive https://github.com/ManasviGoyal/kaitai_awkward_runtime.git
 ```
-
-2. Change directory to `kaitai_awkward_runtime`:
 ```
 cd kaitai_awkward_runtime
 ```
-<!--- if we want to set up the package_name as ksy name we can just skip the PACKAGE_NAME argument -->
 
-3. Install the library, and open Python:
+### 4. Generate the source and header files for Awkward target
 ```
-pip install . --config-settings 'cmake.define.KSY=schemas/animal.ksy'   
+kaitai-struct-compiler -t awkward --outdir src-animal example_data/schemas/animal.ksy
+```
+
+### 5. Install the library, and open Python:
+```
+pip install
 python
 ```
 
-4. Print the returned `ak.Array`:
+### 6. Print the returned `ak.Array`:
 ```python
-import kaitai_awkward_runtime
-awkward_array = kaitai_awkward_runtime.load("data/animal.raw")
-print(awkward_array)
+import awkward_kaitai
+animal = awkward_kaitai.Reader("./libanimal.so")
+awkward_array =  animal.load("example_data/data/animal.raw")
+print(ak.to_list(awkward_array))
 ```
 
-
-> **Info**
-> `kaitai_awkward_runtime` depends upon `sbt`, and `gtest` dependencies.
+#### Output
+```
+[{'entry': [{'str_len': 3, 'species': 'cat', 'age': 5, 'weight': 12}]}, {'entry': [{'str_len': 3, 'species': 'dog', 'age': 3, 'weight': 43}]}, {'entry': [{'str_len': 6, 'species': 'turtle', 'age': 10, 'weight': 5}]}]
+```
