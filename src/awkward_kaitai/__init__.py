@@ -1,7 +1,7 @@
 """
 Copyright (c) 2023 Manasvi Goyal. All rights reserved.
 
-kaitai_awkward: Kaitai Struct runtime for Awkward Arrays
+awkward_kaitai: Kaitai Struct runtime for Awkward Arrays
 """
 
 

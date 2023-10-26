@@ -9,12 +9,12 @@ import tempfile
 import shutil
 import importlib.metadata
 import importlib_resources
-import kaitai_awkward.data
+import awkward_kaitai.data
 
 
 def find_package_record_path() -> pathlib.Path:
     return next(
-        p for p in importlib.metadata.files("kaitai_awkward") if p.name == "RECORD"
+        p for p in importlib.metadata.files("awkward_kaitai") if p.name == "RECORD"
     ).locate()
 
 
@@ -59,7 +59,7 @@ def build_with_cmake(
         temp_path = pathlib.Path(_temp_path)
         temp_path.mkdir(exist_ok=True)
 
-        files_path = importlib_resources.files(kaitai_awkward.data)
+        files_path = importlib_resources.files(awkward_kaitai.data)
         record_path = find_package_record_path()
 
         # Load resources from the Python package
