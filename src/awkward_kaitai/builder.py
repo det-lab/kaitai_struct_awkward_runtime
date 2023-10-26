@@ -2,25 +2,33 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import importlib.metadata
 import os
 import pathlib
+import shutil
 import subprocess
 import tempfile
-import shutil
-import importlib.metadata
+from collections.abc import Iterator
+from typing import ContextManager, cast
+
 import importlib_resources
+
 import awkward_kaitai.data
 
 
 def find_package_record_path() -> pathlib.Path:
-    return next(
-        p for p in importlib.metadata.files("awkward_kaitai") if p.name == "RECORD"
-    ).locate()
+    files = importlib.metadata.files("awkward_kaitai")
+    if files is None:
+        msg = "couldn't find RECORD for awkward_kaitai"
+        raise FileNotFoundError(msg)
+
+    record_path = next(p for p in files if p.name == "RECORD").locate()
+    return pathlib.Path(os.fsdecode(record_path))
 
 
 def find_cmake() -> Iterator[pathlib.Path]:
     with contextlib.suppress(ImportError):
-        from cmake import CMAKE_BIN_DIR
+        from cmake import CMAKE_BIN_DIR  # type: ignore[import]
 
         yield pathlib.Path(CMAKE_BIN_DIR) / "cmake"
 
@@ -30,7 +38,9 @@ def find_cmake() -> Iterator[pathlib.Path]:
             yield pathlib.Path(cmake_path)
 
 
-def copy_file_with_stat(src: pathlib.Path, dst: pathlib.Path, stat_src: pathlib.Path):
+def copy_file_with_stat(
+    src: pathlib.Path, dst: pathlib.Path, stat_src: pathlib.Path
+) -> None:
     shutil.copy(src, dst)
     shutil.copystat(stat_src, dst)
 
@@ -43,18 +53,20 @@ def build_with_cmake(
     main_path: pathlib.Path,
     dest_path: pathlib.Path,
     configure_path: pathlib.Path | None,
-):
+) -> None:
     try:
         cmake_path = next(find_cmake())
     except StopIteration:
-        raise RuntimeError("Could not find CMake binary")
+        msg = "Could not find CMake binary. CMake can be found on PyPI and installed using `pip install cmake`"
+        raise RuntimeError(msg) from None
 
     # Copy various CMake files into correct positions
-    build_context = (
-        tempfile.TemporaryDirectory()
-        if configure_path is None
-        else contextlib.nullcontext(configure_path)
-    )
+    build_context: ContextManager[str | pathlib.Path]
+    if configure_path is None:
+        build_context = cast(ContextManager[str], tempfile.TemporaryDirectory())
+    else:
+        build_context = contextlib.nullcontext(configure_path)
+
     with build_context as _temp_path:
         temp_path = pathlib.Path(_temp_path)
         temp_path.mkdir(exist_ok=True)
@@ -95,7 +107,7 @@ def build_with_cmake(
                 str(build_path),
                 f"-DKAITAI_MAIN_FILE={main_path.resolve()}",
                 f"-DCMAKE_INSTALL_PREFIX={dest_path.resolve()}",
-                f"-DAWKWARD_VERSION={get_awkward_version()}"
+                f"-DAWKWARD_VERSION={get_awkward_version()}",
             ],
             check=True,
         )
@@ -113,7 +125,7 @@ def build_with_cmake(
         )
 
 
-def main(argv: list[str] = None):
+def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("file", help="Main `.cpp` file to build", type=pathlib.Path)
     parser.add_argument(
@@ -128,10 +140,7 @@ def main(argv: list[str] = None):
 
     args = parser.parse_args(argv)
 
-    if args.dest is None:
-        dest = args.file.parent
-    else:
-        dest = args.dest
+    dest = args.file.parent if args.dest is None else args.dest
 
     build_with_cmake(args.file, dest, args.build)
 

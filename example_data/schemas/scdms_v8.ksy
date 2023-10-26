@@ -1,7 +1,7 @@
 meta:
   id: test
   endian: le
-  
+
 enums:
 
   trigger_types:
@@ -19,7 +19,7 @@ enums:
       id: borts   # begin of run test signal
     7:
       id: eorts   # end of run test signal
-  
+
 seq:
   - id: odb_hdr
     type: u2
@@ -29,7 +29,7 @@ seq:
     type: u4
   - id: odb
     size: odb_size
-    
+
   - id: entry
     type: entry_block
     repeat: eos
@@ -40,7 +40,7 @@ types:
     seq:
       - id: midas_hdr
         type: midas_header
-        
+
       - id: scdms_data
         type: scdms_data_block
         if: midas_hdr.bank_name == "SCD0"
@@ -50,7 +50,7 @@ types:
       - id: data
         size: midas_hdr.bank_size
         if: midas_hdr.bank_name != "SCD0" and midas_hdr.bank_name != "DMC0"
-  
+
 
   midas_header:
     seq:
@@ -104,9 +104,9 @@ types:
 
       format_version:
         value: ((packed & 0x0f_ff_f0_00) >> 12)
-  
+
   trigger_block:
-    seq: 
+    seq:
     - id: event_hdr
       type: event_header
     - id: num_primitive_hdr
@@ -134,9 +134,9 @@ types:
       #if: num_sdu_hdr.num_sdu != 0
       repeat: expr
       repeat-expr: num_sdu_hdr.num_sdu
-  
+
   event_header:
-  
+
     seq:
       - id: packed_event_size
         type: u4
@@ -154,40 +154,40 @@ types:
         type: u4
       - id: poll_time_fraction
         type: u4
-        
+
     instances:
-    
+
       # Values parsed from packed_event_size
       trig_header:
         value: ((packed_event_size & 0xf0_00_00_00) >> 28)
       event_size:
         value: (packed_event_size & 0x0f_ff_ff_ff)
-        
+
       # Values parsed from packed_type
       trigger_type:
         value: (packed_type & 0x00_00_00_0f)
         enum: trigger_types
       readout_bitmask:
         value: ((packed_type & 0xff_ff_ff_00) >> 8)
-        
+
       # Values parsed from packed_poll_end
       poll_cycle_end_time:
         value: (packed_poll_end & 0x00_00_ff_ff)
-        
+
   num_primitive_header:
     seq:
       - id: packed_primitive_num
         type: u4
       - id: entry_length
         type: u4
-      
+
     instances:
       # Values parsed from packed_primitive_num
       num_primitives:
         value: (packed_primitive_num & 0x0f_ff_ff_ff)
       prim_header:
         value: ((packed_primitive_num & 0xf0_00_00_00) >> 28)
-    
+
   primitive_block:
     seq:
       - id: packed_primitive
@@ -208,7 +208,7 @@ types:
         type: u2
       - id: peak_amplitude
         type: u4
-    
+
     instances:
       # Values parsed from packed_primitive
       trig_status:
@@ -221,29 +221,29 @@ types:
         value: ((packed_primitive & 0x00_00_0c_00) >> 10)
       prim_dcrc_header:
         value: ((packed_primitive & 0xf0_00_00_00) >> 28)
-        
+
       # Values parsed from rt_run_time_fraction_packed
       rt_run_time_fraction:
         value: (rt_run_time_fraction_packed & 0x00_ff_ff_ff)
-  
+
       # Values parsed from trigger_mask_packed
-      trig_mask: 
+      trig_mask:
         value: ((trigger_mask_packed & 0xff_00_00_00) >> 24)
-      trig_time_frac: 
+      trig_time_frac:
         value: (trigger_mask_packed & 0x00_ff_ff_ff)
 
-  detectors: 
+  detectors:
     seq:
       - id: n_detectors_packed
         type: u4
-        
+
     instances:
       detectors_in_event:
         value: (n_detectors_packed & 0x0f_ff_ff_ff)
 
       num_det_header:
         value: ((n_detectors_packed & 0xf0_00_00_00) >> 28)
-        
+
   detector_block:
     seq:
       - id: detector_hdr
@@ -256,7 +256,7 @@ types:
         type: channel_block
         repeat: expr
         repeat-expr: num_channels_hdr.num_channels
-        
+
   detector_header:
     seq:
       - id: detector_hdr_packed
@@ -269,7 +269,7 @@ types:
         type: u1
       - id: dcrc2_version
         type: u1
-    
+
     instances:
       detector_type:
         value: ((detector_hdr_packed & 0x0f_ff_fc_00) >> 10)
@@ -279,7 +279,7 @@ types:
         value: ((detector_hdr_packed & 0x00_00_03_fc) >> 2)
       detector_header:
         value: ((detector_hdr_packed & 0xf0_00_00_00) >> 28)
-        
+
   readout_header:
     seq:
       - id: readout_hdr_packed_1
@@ -294,7 +294,7 @@ types:
         type: u4
       - id: waveform_read_end_time_fraction
         type: u4
-        
+
     instances:
       readout_header:
         value: ((readout_hdr_packed_1 & 0xf0_00_00_00) >> 28)
@@ -302,23 +302,23 @@ types:
         value: ((readout_hdr_packed_1 & 0x0f_ff_00_00) >> 16)
       series_time:
         value: (readout_hdr_packed_1 & 0x00_00_ff_ff)
-        
+
       has_thermometry_readout:
         value: ((readout_hdr_packed_2 & 0x10_00_00_00) >> 31)
       series_time_fraction:
         value: (readout_hdr_packed_2 & 0x00_00_ff_ff)
-  
+
   num_channels_header:
     seq:
       - id: num_channels_packed
         type: u4
-        
+
     instances:
       channels_header:
         value: ((num_channels_packed & 0xf0_00_00_00) >> 28)
       num_channels:
         value: (num_channels_packed & 0x0f_ff_ff_ff)
-  
+
   channel_block:
     seq:
       - id: channel_packed
@@ -337,7 +337,7 @@ types:
         type: u2
         repeat: expr
         repeat-expr: num_pre_pulse_samples + num_on_pulse_samples + num_post_pulse_samples
-    
+
     instances:
       channel_flag:
         value: ((channel_packed & 0xf0_00_00_00) >> 28)
@@ -349,24 +349,24 @@ types:
         value: ((channel_packed & 0x00_00_00_02) >> 1)
       channel_type:
         value: (channel_packed & 0x00_00_00_01)
-        
+
   sdu_primitive_header:
     seq:
       - id: sdu_num_primitive_packed
         type: u4
       - id: sdu_entry_length
         type: u4
-        
+
     instances:
       sdu_header:
         value: ((sdu_num_primitive_packed & 0xf0_00_00_00) >> 28)
-      
+
       num_sdu_primitives:
         value: (sdu_num_primitive_packed & 0x07_ff_ff_ff)
-      
+
       has_sdu_data:
         value: ((sdu_num_primitive_packed & 0x01_00_00_00) >> 27)
-        
+
   sdu_primitive_block:
     seq:
       - id: sdu_block_header
@@ -387,25 +387,25 @@ types:
         type: u4
       - id: peak_amplitude
         type: u2
-        
+
     instances:
       rt_run_time_fraction:
         value: (rt_run_time_fraction_packed & 0x00_ff_ff_ff)
-      
+
       trigger_time_fraction:
         value: (trigger_time_fraction_packed & 0x00_ff_ff_ff)
-        
+
   num_sdu_header:
-    seq: 
+    seq:
       - id: num_sdu_packed
         type: u4
-        
+
     instances:
       num_sdu:
         value: (num_sdu_packed & 0x0f_ff_ff_ff)
       num_sdu_flag:
         value: ((num_sdu_packed & 0xf0_00_00_00) >> 28)
-          
+
   sdu_block:
     seq:
       - id: sdu_readout_header_packed
@@ -426,7 +426,7 @@ types:
         type: sdu_channel_block
         repeat: expr
         repeat-expr: num_sdu_channels
-    
+
     instances:
       sdu_readout_flag:
         value: ((sdu_readout_header_packed & 0xf0_00_00_00) >> 28)
@@ -436,12 +436,12 @@ types:
         value: (sdu_readout_header_packed & 0x00_00_ff_ff)
       sdu_series_time_fraction:
         value: (sdu_readout_header_packed & 0x00_ff_ff_ff)
-        
+
       num_sdu_channels:
         value: (sdu_num_channels_header_packed & 0x0f_ff_ff_f)
       num_sdu_channels_flag:
         value: ((sdu_num_channels_header_packed & 0xf0_00_00_00) >> 28)
-        
+
   sdu_channel_block:
     seq:
       - id: sdu_channel_header_packed
@@ -457,7 +457,7 @@ types:
         type: u2
         repeat: expr
         repeat-expr: sdu_num_samples
-        
+
     instances:
       sdu_channel_flag:
         value: ((sdu_channel_header_packed & 0xf0_00_00_00) >> 28)
@@ -467,12 +467,12 @@ types:
         value: ((sdu_channel_header_packed & 0x00_00_00_38) >> 3)
       sdu_channel_num:
         value: (sdu_channel_header_packed & 0x00_00_00_07)
-        
+
   scdms_footer:
     seq:
       - id: preceeding_triggers_packed
         type: u4
-    
+
     instances:
       preceeding_triggers_flag:
         value: ((preceeding_triggers_packed & 0xf0_00_00_00) >> 28)
