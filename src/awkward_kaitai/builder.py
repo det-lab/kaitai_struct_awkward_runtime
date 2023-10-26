@@ -47,7 +47,9 @@ def build_with_cmake(
     try:
         cmake_path = next(find_cmake())
     except StopIteration:
-        raise RuntimeError("Could not find CMake binary")
+        raise RuntimeError(
+            "Could not find CMake binary. CMake can be found on PyPI and installed using `pip install cmake`"
+        )
 
     # Copy various CMake files into correct positions
     build_context = (
@@ -95,7 +97,7 @@ def build_with_cmake(
                 str(build_path),
                 f"-DKAITAI_MAIN_FILE={main_path.resolve()}",
                 f"-DCMAKE_INSTALL_PREFIX={dest_path.resolve()}",
-                f"-DAWKWARD_VERSION={get_awkward_version()}"
+                f"-DAWKWARD_VERSION={get_awkward_version()}",
             ],
             check=True,
         )
