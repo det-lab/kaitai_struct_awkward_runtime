@@ -113,6 +113,12 @@ ignore_errors = true
 ignore_missing_imports = true
 
 
+[[tool.mypy.overrides]]
+module = 'cmake.*'
+ignore_errors = true
+ignore_missing_imports = true
+
+
 [tool.ruff]
 select = [
   "E", "F", "W", # flake8
