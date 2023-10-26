@@ -86,61 +86,61 @@ fake_t::point_t::~point_t() {
 void fake_t::point_t::_clean_up() {
 }
  
-#ifdef USE_FAKE_
+#ifdef USE_FAKE
 
-FakeBuilderType* load(std::string file_path) {
-    std::ifstream infile(file_path, std::ifstream::binary);
-    kaitai::kstream ks(&infile);
-    fake_t* obj = new fake_t(&ks);
-    builder_map[file_path] = &(obj->fake_builder);
-    return builder_map[file_path];
-}
+    FakeBuilderType* load(std::string file_path) {
+        std::ifstream infile(file_path, std::ifstream::binary);
+        kaitai::kstream ks(&infile);
+        fake_t* obj = new fake_t(&ks);
+        builder_map[file_path] = &(obj->fake_builder);
+        return builder_map[file_path];
+    }
 
-extern "C" {
+    extern "C" {
 
-    Result fill(const char* file_path) {
-        Result result;
-        std::string error_message;
-        FakeBuilderType* builder = load(file_path);
-        bool is_valid = builder->is_valid(error_message);
-        if (is_valid) {
-            result.builder = builder;
-            result.error_message = NULL;
+        Result fill(const char* file_path) {
+            Result result;
+            std::string error_message;
+            FakeBuilderType* builder = load(file_path);
+            bool is_valid = builder->is_valid(error_message);
+            if (is_valid) {
+                result.builder = builder;
+                result.error_message = NULL;
+            }
+            else {
+                result.builder = NULL;
+                result.error_message = error_message.c_str();
+            }
+            return result;
         }
-        else {
-            result.builder = NULL;
-            result.error_message = error_message.c_str();
+
+        const char* form(void* builder) {
+            return strdup(reinterpret_cast<FakeBuilderType*>(builder)->form().c_str());
         }
-        return result;
+
+        int64_t length(void* builder) {
+            return reinterpret_cast<FakeBuilderType*>(builder)->length();
+        }
+
+        int64_t num_buffers(void* builder) {
+            return awkward::num_buffers_helper(reinterpret_cast<FakeBuilderType*>(builder));
+        }
+
+        const char* buffer_name(void* builder, int64_t index) {
+            return awkward::buffer_name_helper(reinterpret_cast<FakeBuilderType*>(builder))[index].c_str();
+        }
+
+        int64_t buffer_size(void* builder, int64_t index) {
+            return awkward::buffer_size_helper(reinterpret_cast<FakeBuilderType*>(builder))[index];
+        }
+
+        void copy_into(const char* name, void* from_builder, void* to_buffer, int64_t index) {
+            reinterpret_cast<FakeBuilderType*>(from_builder)->to_buffer(to_buffer, name);
+        }
+
+        void deallocate(void* builder) {
+            reinterpret_cast<FakeBuilderType*>(builder)->clear();
+        }
     }
 
-    const char* form(void* builder) {
-        return strdup(reinterpret_cast<FakeBuilderType*>(builder)->form().c_str());
-    }
-
-    int64_t length(void* builder) {
-        return reinterpret_cast<FakeBuilderType*>(builder)->length();
-    }
-
-    int64_t num_buffers(void* builder) {
-        return awkward::num_buffers_helper(reinterpret_cast<FakeBuilderType*>(builder));
-    }
-
-    const char* buffer_name(void* builder, int64_t index) {
-        return awkward::buffer_name_helper(reinterpret_cast<FakeBuilderType*>(builder))[index].c_str();
-    }
-
-    int64_t buffer_size(void* builder, int64_t index) {
-        return awkward::buffer_size_helper(reinterpret_cast<FakeBuilderType*>(builder))[index];
-    }
-
-    void copy_into(const char* name, void* from_builder, void* to_buffer, int64_t index) {
-        reinterpret_cast<FakeBuilderType*>(from_builder)->to_buffer(to_buffer, name);
-    }
-
-    void deallocate(void* builder) {
-        reinterpret_cast<FakeBuilderType*>(builder)->clear();
-    }
-}
-
-#endif // USE_FAKE_
+#endif // USE_FAKE

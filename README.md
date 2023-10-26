@@ -40,12 +40,12 @@ types:
 
 ### 2. Get `kaitai-struct-compiler` from source.
 
-### 3. Clone `kaitai_awkward_runtime` repository:
+### 3. Clone `awkward_kaitai_runtime` repository:
 ```
-git clone --recursive https://github.com/ManasviGoyal/kaitai_awkward_runtime.git
+git clone --recursive https://github.com/ManasviGoyal/awkward_kaitai_runtime.git
 ```
 ```
-cd kaitai_awkward_runtime
+cd awkward_kaitai_runtime
 ```
 
 ### 4. Generate the source and header files for Awkward target
