@@ -35,6 +35,10 @@ def copy_file_with_stat(src: pathlib.Path, dst: pathlib.Path, stat_src: pathlib.
     shutil.copystat(stat_src, dst)
 
 
+def get_awkward_version() -> str:
+    return f"v{importlib.metadata.version('awkward')}"
+
+
 def build_with_cmake(
     main_path: pathlib.Path,
     dest_path: pathlib.Path,
@@ -91,6 +95,7 @@ def build_with_cmake(
                 str(build_path),
                 f"-DKAITAI_MAIN_FILE={main_path.resolve()}",
                 f"-DCMAKE_INSTALL_PREFIX={dest_path.resolve()}",
+                f"-DAWKWARD_VERSION={get_awkward_version()}"
             ],
             check=True,
         )

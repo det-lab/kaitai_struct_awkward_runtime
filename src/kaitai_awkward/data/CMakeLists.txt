@@ -6,8 +6,10 @@ include(FetchContent)
 set(CMAKE_ENABLE_EXPORTS true)
 
 set(KAITAI_MAIN_FILE "" CACHE STRING "Specify the name of the main KSY file")
-set(AWKWARD_VERSION "v2.4.3")
 set(KAITAI_STRUCT_CPP_STL_RUNTIME_VERSION "0.10.1")
+if(NOT DEFINED AWKWARD_VERSION)
+    message(FATAL_ERROR "AWKWARD_VERSION is not set")
+endif(NOT DEFINED AWKWARD_VERSION)
 
 if(NOT EXISTS "${KAITAI_MAIN_FILE}")
    message(FATAL_ERROR "Could not find main file ${KAITAI_MAIN_FILE}")
