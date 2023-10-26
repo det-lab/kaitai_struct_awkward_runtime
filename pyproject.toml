@@ -67,8 +67,6 @@ envs.default.dependencies = [
   "pytest-cov",
 ]
 
-[tool.hatch.build.targets.wheel.shared-data]
-"share/kaitai_awkward/cmake/" = "share/kaitai_awkward/cmake/"
 
 
 [tool.pytest.ini_options]
