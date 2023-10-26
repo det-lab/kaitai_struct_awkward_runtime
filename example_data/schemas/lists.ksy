@@ -2,12 +2,12 @@ meta:
   id: lists
   file-extension: list
   endian: le
-  
+
 seq:
   - id: sample_blk
     type: sample_block
     repeat: eos
-    
+
 types:
   sample_block:
     seq:

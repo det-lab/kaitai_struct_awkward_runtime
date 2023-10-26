@@ -64,11 +64,14 @@ repos:
         args: []
         additional_dependencies:
           - pytest
+          - numpy
+          - importlib_resources
 
   - repo: https://github.com/codespell-project/codespell
     rev: "v2.2.5"
     hooks:
       - id: codespell
+        exclude: \.ksy$
 
   - repo: https://github.com/shellcheck-py/shellcheck-py
     rev: "v0.9.0.5"
@@ -81,7 +84,7 @@ repos:
         name: Disallow improper capitalization
         language: pygrep
         entry: PyBind|Numpy|Cmake|CCache|Github|PyTest
-        exclude: .pre-commit-config.yaml
+        exclude: \.(pre-commit-config.yaml|h|cpp)$
 
   - repo: https://github.com/cheshirekow/cmake-format-precommit
     rev: "v0.6.13"

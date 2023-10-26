@@ -1,11 +1,14 @@
 # Kaitai Struct: runtime library for Awkward
 
-This library building Awkward Arrays using Kaitai Struct API for Awkward using C++/STL.
+This library building Awkward Arrays using Kaitai Struct API for Awkward using
+C++/STL.
 
 ## Steps
 
 ### 1. Write a .ksy file for your custom file format. Refer to the [Kaitai User Guide](https://doc.kaitai.io/user_guide.html) for more details.
+
 Here, we take an example of `animal.ksy`
+
 ```yaml
 meta:
   id: animal
@@ -14,13 +17,11 @@ meta:
   ks-version: 0.8
 
 seq:
-
   - id: entry
     type: animal_entry
     repeat: eos
 
 types:
-
   animal_entry:
     seq:
       - id: str_len
@@ -41,33 +42,40 @@ types:
 ### 2. Get `kaitai-struct-compiler` from source.
 
 ### 3. Clone `awkward_kaitai_runtime` repository:
+
 ```
 git clone --recursive https://github.com/ManasviGoyal/awkward_kaitai_runtime.git
 ```
+
 ```
 cd awkward_kaitai_runtime
 ```
 
 ### 4. Generate the source and header files for Awkward target
+
 ```
 kaitai-struct-compiler -t awkward --outdir src-animal example_data/schemas/animal.ksy
 ```
 
 ### 5. Install the library, and open Python:
+
 ```
 pip install
 python
 ```
 
 ### 6. Print the returned `ak.Array`:
+
 ```python
 import awkward_kaitai
+
 animal = awkward_kaitai.Reader("./libanimal.so")
-awkward_array =  animal.load("example_data/data/animal.raw")
+awkward_array = animal.load("example_data/data/animal.raw")
 print(ak.to_list(awkward_array))
 ```
 
 #### Output
+
 ```
 [{'entry': [{'str_len': 3, 'species': 'cat', 'age': 5, 'weight': 12}]}, {'entry': [{'str_len': 3, 'species': 'dog', 'age': 3, 'weight': 43}]}, {'entry': [{'str_len': 6, 'species': 'turtle', 'age': 10, 'weight': 5}]}]
 ```

@@ -5,19 +5,23 @@ __all__ = ("Reader",)
 import ctypes
 import os
 import pathlib
-import numpy as np
+from typing import TYPE_CHECKING, Any, AnyStr, Final
+
 import awkward as ak
-from typing import AnyStr
+import numpy as np
+
+if TYPE_CHECKING:
+    from numpy.typing import NDArray
 
 
 class Reader:
-    def __init__(self, library_path: os.PathLike | AnyStr):
-        self.library_path = pathlib.Path(library_path)
-        self.lib = ctypes.CDLL(library_path)
+    def __init__(self, library_path: os.PathLike[Any] | AnyStr):
+        self.library_path = pathlib.Path(os.fsdecode(library_path))
+        self.lib = ctypes.CDLL(os.fsdecode(library_path))
 
-    def load(self, file_path: str):
+    def load(self, file_path: str) -> ak.Array:
         class Result(ctypes.Structure):
-            _fields_ = [
+            _fields_: Final = [
                 ("builder", ctypes.c_void_p),
                 ("error_message", ctypes.c_char_p),
             ]
@@ -65,10 +69,10 @@ class Reader:
         builder_form = form(builder).decode("utf-8")
         builder_length = length(builder)
         num_buffers = num_buffers(builder)
-        containers = {}
+        containers: dict[str, NDArray[np.uint8]] = {}
 
         try:
-            for i in range(num_buffers):
+            for i in range(num_buffers):  #  type: ignore[call-overload]
                 name = buffer_name(builder, i)
                 size = buffer_size(builder, i)
                 containers[name.decode("utf-8")] = np.empty(size, dtype=np.uint8)
