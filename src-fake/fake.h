@@ -95,8 +95,7 @@ public:
     FakeBuilderType fake_builder;
 };
 
-#ifndef USE_FAKE_
-#define USE_FAKE_
+#ifdef USE_FAKE
 
 std::map<std::string, FakeBuilderType*> builder_map;
 
@@ -126,7 +125,7 @@ extern "C" {
     void deallocate(void* builder);
 }
 
-#endif // USE_FAKE_
+#endif // USE_FAKE
 
 
 #endif  // FAKE_H_

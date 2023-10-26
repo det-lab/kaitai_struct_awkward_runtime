@@ -86,7 +86,7 @@ fake_t::point_t::~point_t() {
 void fake_t::point_t::_clean_up() {
 }
  
-#ifdef USE_FAKE_
+#ifdef USE_FAKE
 
 FakeBuilderType* load(std::string file_path) {
     std::ifstream infile(file_path, std::ifstream::binary);
@@ -143,4 +143,4 @@ extern "C" {
     }
 }
 
-#endif // USE_FAKE_
+#endif // USE_FAKE
