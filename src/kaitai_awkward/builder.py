@@ -30,8 +30,9 @@ def find_cmake() -> Iterator[pathlib.Path]:
             yield pathlib.Path(cmake_path)
 
 
-def copy_file_with_stat(src: pathlib.Path, dst: pathlib.Path, stat: os.stat_result):
-    ...
+def copy_file_with_stat(src: pathlib.Path, dst: pathlib.Path, stat_src: pathlib.Path):
+    shutil.copy(src, dst)
+    shutil.copystat(stat_src, dst)
 
 
 def build_with_cmake(
@@ -55,7 +56,7 @@ def build_with_cmake(
         temp_path.mkdir(exist_ok=True)
 
         files_path = importlib_resources.files(kaitai_awkward.data)
-        record_stat = find_package_record_path().stat()
+        record_path = find_package_record_path()
 
         # Load resources from the Python package
         with importlib_resources.as_file(
@@ -65,7 +66,7 @@ def build_with_cmake(
         ) as kaitai_struct_cmakelists_path:
             # Copy resources to new temporary directory
             copy_file_with_stat(
-                cmakelists_path, temp_path / "CMakeLists.txt", record_stat
+                cmakelists_path, temp_path / "CMakeLists.txt", record_path
             )
 
             # Copy Katai Struct's CMakeLists.txt
@@ -74,7 +75,7 @@ def build_with_cmake(
             copy_file_with_stat(
                 kaitai_struct_cmakelists_path,
                 kaitai_struct_path / "CMakeLists.txt",
-                record_stat,
+                record_path,
             )
 
         # Prepare build
