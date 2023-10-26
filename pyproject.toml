@@ -1,21 +1,21 @@
 [build-system]
-requires = ["pybind11", "scikit-build-core"]
-build-backend = "scikit_build_core.build"
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
 
 
 [project]
-name = "kaitai_awkward_runtime"
+name = "kaitai_awkward"
 authors = [
-  { name = "Manasvi", email = "mg.manasvi@gmail.com" },
+  { name = "Manasvi Goyal", email = "mg.manasvi@gmail.com" },
 ]
-description = "Kaitai Struct: runtime for Awkward Arrays"
+description = "Kaitai Struct runtime for Awkward Arrays"
 readme = "README.md"
 requires-python = ">=3.8"
 classifiers = [
   "Development Status :: 1 - Planning",
   "Intended Audience :: Science/Research",
   "Intended Audience :: Developers",
-  "License :: OSI Approved :: MIT License",
+  "License :: OSI Approved :: BSD License",
   "Operating System :: OS Independent",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3",
@@ -29,9 +29,7 @@ classifiers = [
   "Typing :: Typed",
 ]
 dynamic = ["version"]
-dependencies = [
-    "awkward>2.4.3"
-]
+dependencies = []
 
 [project.optional-dependencies]
 test = [
@@ -43,37 +41,27 @@ dev = [
   "pytest-cov >=3",
 ]
 docs = [
-  "sphinx>=4.0",
+  "sphinx>=7.0",
   "myst_parser>=0.13",
-  "sphinx_book_theme>=0.1.0",
   "sphinx_copybutton",
   "sphinx_autodoc_typehints",
-  "furo",
+  "furo>=2023.08.17",
 ]
 
 [project.urls]
 Homepage = "https://github.com/ManasviGoyal/kaitai_awkward_runtime"
 "Bug Tracker" = "https://github.com/ManasviGoyal/kaitai_awkward_runtime/issues"
+Discussions = "https://github.com/ManasviGoyal/kaitai_awkward_runtime/discussions"
+Changelog = "https://github.com/ManasviGoyal/kaitai_awkward_runtime/releases"
 
 
-[tool.scikit-build]
-minimum-version = "0.4"
-build-dir = "build/{wheel_tag}"
-metadata.version.provider = "scikit_build_core.metadata.setuptools_scm"
-sdist.include = ["src/kaitai_awkward_runtime/_version.py"]
-cmake.verbose = true
-logging.level = "INFO"
-cmake.build-type = "Debug"
-
-
-[tool.setuptools_scm]
-write_to = "src/kaitai_awkward_runtime/_version.py"
-
-
-[tool.cibuildwheel]
-test-command = "pytest {project}/tests"
-test-extras = ["test"]
-test-skip = ["*universal2:arm64"]
+[tool.hatch]
+version.source = "vcs"
+build.hooks.vcs.version-file = "src/kaitai_awkward/_version.py"
+envs.default.dependencies = [
+  "pytest",
+  "pytest-cov",
+]
 
 
 [tool.pytest.ini_options]
@@ -90,7 +78,7 @@ testpaths = [
 
 
 [tool.coverage]
-run.source = ["kaitai_awkward_runtime"]
+run.source = ["kaitai_awkward"]
 port.exclude_lines = [
   'pragma: no cover',
   '\.\.\.',
@@ -109,7 +97,7 @@ disallow_untyped_defs = false
 disallow_incomplete_defs = false
 
 [[tool.mypy.overrides]]
-module = "kaitai_awkward_runtime.*"
+module = "kaitai_awkward.*"
 disallow_untyped_defs = true
 disallow_incomplete_defs = true
 
@@ -153,7 +141,7 @@ exclude = []
 flake8-unused-arguments.ignore-variadic-names = true
 isort.required-imports = ["from __future__ import annotations"]
 # Uncomment if using a _compat.typing backport
-# typing-modules = ["kaitai_awkward_runtime._compat.typing"]
+# typing-modules = ["kaitai_awkward._compat.typing"]
 
 [tool.ruff.per-file-ignores]
 "tests/**" = ["T20"]
@@ -163,7 +151,6 @@ isort.required-imports = ["from __future__ import annotations"]
 [tool.pylint]
 py-version = "3.8"
 ignore-paths = [".*/_version.py"]
-extension-pkg-allow-list = ["kaitai_awkward_runtime._core"]
 reports.output-format = "colorized"
 similarities.ignore-imports = "yes"
 messages_control.disable = [
