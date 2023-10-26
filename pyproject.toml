@@ -15,7 +15,7 @@ classifiers = [
   "Development Status :: 1 - Planning",
   "Intended Audience :: Science/Research",
   "Intended Audience :: Developers",
-  "License :: OSI Approved :: BSD License",
+  "License :: OSI Approved :: MIT License",
   "Operating System :: OS Independent",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3",
@@ -67,8 +67,6 @@ envs.default.dependencies = [
   "pytest-cov",
 ]
 
-[tool.hatch.build.targets.wheel.shared-data]
-"share/kaitai_awkward/cmake/" = "share/kaitai_awkward/cmake/"
 
 
 [tool.pytest.ini_options]
