@@ -29,7 +29,11 @@ classifiers = [
   "Typing :: Typed",
 ]
 dynamic = ["version"]
-dependencies = []
+dependencies = ["awkward>2.4.3", "importlib-resources"]
+
+[project.scripts]
+kaitai-awkward-build = "kaitai_awkward.builder:main"
+
 
 [project.optional-dependencies]
 test = [
@@ -62,6 +66,9 @@ envs.default.dependencies = [
   "pytest",
   "pytest-cov",
 ]
+
+[tool.hatch.build.targets.wheel.shared-data]
+"share/kaitai_awkward/cmake/" = "share/kaitai_awkward/cmake/"
 
 
 [tool.pytest.ini_options]

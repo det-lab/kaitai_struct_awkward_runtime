@@ -97,33 +97,33 @@ public:
 
 #ifdef USE_FAKE
 
-std::map<std::string, FakeBuilderType*> builder_map;
+    std::map<std::string, FakeBuilderType*> builder_map;
 
-FakeBuilderType* load(std::string file_path);
+    FakeBuilderType* load(std::string file_path);
 
-extern "C" {
+    extern "C" {
 
-    struct Result {
-        void* builder;
-        const char* error_message;
-    };
+        struct Result {
+            void* builder;
+            const char* error_message;
+        };
 
-    Result fill(const char* file_path);
+        Result fill(const char* file_path);
 
-    const char* form(void* builder);
+        const char* form(void* builder);
 
-    int64_t length(void* builder);
+        int64_t length(void* builder);
 
-    int64_t num_buffers(void* builder);
+        int64_t num_buffers(void* builder);
 
-    const char* buffer_name(void* builder, int64_t index);
+        const char* buffer_name(void* builder, int64_t index);
 
-    int64_t buffer_size(void* builder, int64_t index);
+        int64_t buffer_size(void* builder, int64_t index);
 
-    void copy_into(const char* name, void* from_builder, void* to_buffer, int64_t index);
+        void copy_into(const char* name, void* from_builder, void* to_buffer, int64_t index);
 
-    void deallocate(void* builder);
-}
+        void deallocate(void* builder);
+    }
 
 #endif // USE_FAKE
 
