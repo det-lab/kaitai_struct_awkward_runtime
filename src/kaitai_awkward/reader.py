@@ -11,7 +11,6 @@ from typing import AnyStr
 
 
 class Reader:
-
     def __init__(self, library_path: os.PathLike | AnyStr):
         self.library_path = pathlib.Path(library_path)
         self.lib = ctypes.CDLL(library_path)
@@ -25,7 +24,7 @@ class Reader:
 
         fill = self.lib.fill
         fill.argtypes = [ctypes.c_char_p]
-        fill.restypes = Result
+        fill.restype = Result
 
         form = self.lib.form
         form.argtypes = [ctypes.c_void_p]
@@ -48,26 +47,36 @@ class Reader:
         buffer_size.restype = ctypes.c_int64
 
         copy_into = self.lib.copy_into
-        copy_into.argtypes = [ctypes.c_char_p, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_int64]
+        copy_into.argtypes = [
+            ctypes.c_char_p,
+            ctypes.c_void_p,
+            ctypes.c_void_p,
+            ctypes.c_int64,
+        ]
 
         deallocate = self.lib.deallocate
         deallocate.argtypes = [ctypes.c_void_p]
 
-        result = fill(file_path.encode('utf-8'))
+        result = fill(file_path.encode("utf-8"))
+        if result.error_message is not None:
+            raise RuntimeError(result.error_message.decode("utf-8"))
+        builder = result.builder
 
-        builder_form = form(result).decode("utf-8")
-        builder_length = length(result)
-        num_buffers = num_buffers(result)
+        builder_form = form(builder).decode("utf-8")
+        builder_length = length(builder)
+        num_buffers = num_buffers(builder)
         containers = {}
 
         try:
             for i in range(num_buffers):
-                name = buffer_name(result, i)
-                size = buffer_size(result, i)
-                containers[name.decode('utf-8')] = np.empty(size, dtype=np.uint8)
-                pointer = containers[name.decode('utf-8')].__array_interface__['data'][0]
-                copy_into(ctypes.c_char_p(name), result, pointer, i)
+                name = buffer_name(builder, i)
+                size = buffer_size(builder, i)
+                containers[name.decode("utf-8")] = np.empty(size, dtype=np.uint8)
+                pointer = containers[name.decode("utf-8")].__array_interface__["data"][
+                    0
+                ]
+                copy_into(ctypes.c_char_p(name), builder, pointer, i)
         finally:
-            deallocate(result)
-    
+            deallocate(builder)
+
         return ak.from_buffers(builder_form, builder_length, containers)
