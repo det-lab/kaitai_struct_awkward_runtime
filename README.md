@@ -48,7 +48,7 @@ git clone --recursive https://github.com/ManasviGoyal/kaitai_struct_awkward_runt
 ```
 
 ```
-cd awkward_kaitai_runtime
+cd kaitai_struct_awkward_runtime
 ```
 
 ### 4. Generate the source and header files for Awkward target
