@@ -39,12 +39,12 @@ types:
         type: u2
 ```
 
-### 2. Get `kaitai-struct-compiler` from source.
+### 2. Get `kaitai_struct_compiler` from source.
 
-### 3. Clone `awkward_kaitai_runtime` repository:
+### 3. Clone `kaitai_struct_awkward_runtime` repository:
 
 ```
-git clone --recursive https://github.com/ManasviGoyal/awkward_kaitai_runtime.git
+git clone --recursive https://github.com/ManasviGoyal/kaitai_struct_awkward_runtime.git
 ```
 
 ```
