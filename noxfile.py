@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import argparse
-import shutil
 from pathlib import Path
 
 import nox
@@ -30,7 +28,7 @@ def pylint(session: nox.Session) -> None:
     # This needs to be installed into the package environment, and is slower
     # than a pre-commit check
     session.install(".", "pylint")
-    session.run("pylint", "kaitai_awkward_runtime", *session.posargs)
+    session.run("pylint", "awkward_kaitai", *session.posargs)
 
 
 @nox.session
