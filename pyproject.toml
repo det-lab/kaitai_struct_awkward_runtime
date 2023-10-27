@@ -29,7 +29,7 @@ classifiers = [
   "Typing :: Typed",
 ]
 dynamic = ["version"]
-dependencies = ["awkward>2.4.3", "importlib-resources"]
+dependencies = ["awkward>2.4.7", "importlib-resources"]
 
 [project.scripts]
 awkward-kaitai-build = "awkward_kaitai.builder:main"
