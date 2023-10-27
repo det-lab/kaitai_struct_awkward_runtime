@@ -17,6 +17,7 @@ import awkward_kaitai.data
 
 
 def find_package_record_path() -> pathlib.Path:
+    """Find the path to the RECORD for awkward_kaitai"""
     files = importlib.metadata.files("awkward_kaitai")
     if files is None:
         msg = "couldn't find RECORD for awkward_kaitai"
@@ -27,8 +28,9 @@ def find_package_record_path() -> pathlib.Path:
 
 
 def find_cmake() -> Iterator[pathlib.Path]:
+    """Find the paths of available CMake binaries"""
     with contextlib.suppress(ImportError):
-        from cmake import CMAKE_BIN_DIR  # type: ignore[import]
+        from cmake import CMAKE_BIN_DIR  # pylint: disable=import-outside-toplevel
 
         yield pathlib.Path(CMAKE_BIN_DIR) / "cmake"
 
@@ -41,11 +43,13 @@ def find_cmake() -> Iterator[pathlib.Path]:
 def copy_file_with_stat(
     src: pathlib.Path, dst: pathlib.Path, stat_src: pathlib.Path
 ) -> None:
+    """Copy a file to a destination, using another file's stat attributes"""
     shutil.copy(src, dst)
     shutil.copystat(stat_src, dst)
 
 
 def get_awkward_version() -> str:
+    """Get the version of Awkward Array"""
     return f"v{importlib.metadata.version('awkward')}"
 
 
@@ -54,6 +58,7 @@ def build_with_cmake(
     dest_path: pathlib.Path,
     configure_path: pathlib.Path | None,
 ) -> None:
+    """Build an awkward-kaitai shared-object from the given paths"""
     try:
         cmake_path = next(find_cmake())
     except StopIteration:
@@ -63,7 +68,10 @@ def build_with_cmake(
     # Copy various CMake files into correct positions
     build_context: ContextManager[str | pathlib.Path]
     if configure_path is None:
-        build_context = cast(ContextManager[str], tempfile.TemporaryDirectory())
+        build_context = cast(
+            ContextManager[str],
+            tempfile.TemporaryDirectory(),  # pylint: disable=consider-using-with
+        )
     else:
         build_context = contextlib.nullcontext(configure_path)
 
@@ -126,6 +134,7 @@ def build_with_cmake(
 
 
 def main(argv: list[str] | None = None) -> None:
+    """A CLI for building shared libraries that can read Awkward Array"""
     parser = argparse.ArgumentParser()
     parser.add_argument("file", help="Main `.cpp` file to build", type=pathlib.Path)
     parser.add_argument(

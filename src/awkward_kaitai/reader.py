@@ -15,13 +15,20 @@ if TYPE_CHECKING:
 
 
 class Reader:
+    """Interface between Awkward Katai shared-objects and Awkward Array"""
+
     def __init__(self, library_path: os.PathLike[Any] | AnyStr):
+        """Initialise a reader for Katai Struct data using a given shared library"""
         self.library_path = pathlib.Path(os.fsdecode(library_path))
         self.lib = ctypes.CDLL(os.fsdecode(library_path))
 
     def load(self, file_path: str) -> ak.Array:
-        class Result(ctypes.Structure):
-            _fields_: Final = [
+        """Load suitable data for the current shared library, and return it
+        as an Awkward Array
+        """
+
+        class Result(ctypes.Structure):  # pylint: disable=missing-class-docstring
+            _fields_: Final = [  # pylint: disable=invalid-name
                 ("builder", ctypes.c_void_p),
                 ("error_message", ctypes.c_char_p),
             ]
