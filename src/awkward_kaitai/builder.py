@@ -136,15 +136,15 @@ def build_with_cmake(
 def main(argv: list[str] | None = None) -> None:
     """A CLI for building shared libraries that can read Awkward Array"""
     parser = argparse.ArgumentParser()
-    parser.add_argument("file", help="Main `.cpp` file to build", type=pathlib.Path)
+    parser.add_argument("file", help="main `.cpp` file to build", type=pathlib.Path)
     parser.add_argument(
         "-d",
         "--dest",
         type=pathlib.Path,
-        help="Explicitly specify a destination for the build shared library",
+        help="explicitly specify a destination for the build shared library",
     )
     parser.add_argument(
-        "-b", "--build", type=pathlib.Path, help="Explicitly specify a build location"
+        "-b", "--build", type=pathlib.Path, help="explicitly specify a build location"
     )
 
     args = parser.parse_args(argv)

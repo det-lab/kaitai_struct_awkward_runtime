@@ -57,25 +57,40 @@ cd awkward_kaitai_runtime
 kaitai-struct-compiler -t awkward --outdir src-animal example_data/schemas/animal.ksy
 ```
 
-### 5. Install the library, and open Python:
-
+### 5. Install the library
 ```
-pip install
+pip install .
+```
+
+### 6. Build `awkward_kaitai` by passing the path of the main `.cpp` from the generated code.
+```
+awkward-kaitai-build src-animal/animal.cpp -b build
+```
+> **Note:**
+>
+> `awkward-kaitai-build [-h] [-d DEST] [-b BUILD] file`
+>
+> options:
+>- `-h, --help`: shows help message
+>- `-d DEST, --dest DEST`: explicitly specify a destination for the build shared library.
+>- `-b BUILD, --build BUILD`: explicitly specify a build location.
+
+### 7. Open python and print the returned `ak.Array`:
+```
 python
 ```
-
-### 6. Print the returned `ak.Array`:
 
 ```python
 import awkward_kaitai
 
-animal = awkward_kaitai.Reader("./libanimal.so")
+animal = awkward_kaitai.Reader("./libanimal.so") # pass the path of the shared file
 awkward_array = animal.load("example_data/data/animal.raw")
+
 print(ak.to_list(awkward_array))
 ```
 
 #### Output
 
-```
+```python
 [{'entry': [{'str_len': 3, 'species': 'cat', 'age': 5, 'weight': 12}]}, {'entry': [{'str_len': 3, 'species': 'dog', 'age': 3, 'weight': 43}]}, {'entry': [{'str_len': 6, 'species': 'turtle', 'age': 10, 'weight': 5}]}]
 ```
