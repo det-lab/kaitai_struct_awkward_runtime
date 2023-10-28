@@ -53,10 +53,10 @@ docs = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/ManasviGoyal/awkward_kaitai_runtime"
-"Bug Tracker" = "https://github.com/ManasviGoyal/awkward_kaitai_runtime/issues"
-Discussions = "https://github.com/ManasviGoyal/awkward_kaitai_runtime/discussions"
-Changelog = "https://github.com/ManasviGoyal/awkward_kaitai_runtime/releases"
+Homepage = "https://github.com/ManasviGoyal/kaitai_struct_awkward_runtime"
+"Bug Tracker" = "https://github.com/ManasviGoyal/kaitai_struct_awkward_runtime/issues"
+Discussions = "https://github.com/ManasviGoyal/kaitai_struct_awkward_runtime/discussions"
+Changelog = "https://github.com/ManasviGoyal/kaitai_struct_awkward_runtime/releases"
 
 
 [tool.hatch]
