@@ -39,9 +39,7 @@ types:
         type: u2
 ```
 
-### 2. Get `kaitai_struct_compiler` from source.
-
-### 3. Clone `kaitai_struct_awkward_runtime` repository:
+### 2. Clone `kaitai_struct_awkward_runtime` repository:
 
 ```
 git clone --recursive https://github.com/ManasviGoyal/kaitai_struct_awkward_runtime.git
@@ -50,11 +48,32 @@ git clone --recursive https://github.com/ManasviGoyal/kaitai_struct_awkward_runt
 ```
 cd kaitai_struct_awkward_runtime
 ```
+```
+git checkout ManasviGoyal/test
+```
+
+### 3. Update submodule and compile scala code (only the first time)
+
+```
+git submodule update --init
+```
+
+```
+cd kaitai_struct_compiler
+```
+
+```
+sbt package
+```
+
+```
+cd ../
+```
 
 ### 4. Generate the source and header files for Awkward target
 
 ```
-kaitai-struct-compiler -t awkward --outdir src-animal example_data/schemas/animal.ksy
+./kaitai-struct-compiler -t awkward --outdir src-animal example_data/schemas/animal.ksy
 ```
 
 ### 5. Install the library
@@ -83,10 +102,10 @@ python
 ```python
 import awkward_kaitai
 
-animal = awkward_kaitai.Reader("./libanimal.so") # pass the path of the shared file
+animal = awkward_kaitai.Reader("./src-animal/libanimal.so") # pass the path of the shared file
 awkward_array = animal.load("example_data/data/animal.raw")
 
-print(ak.to_list(awkward_array))
+print(awkward_array.to_list())
 ```
 
 #### Output
