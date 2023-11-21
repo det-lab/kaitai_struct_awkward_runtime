@@ -102,10 +102,10 @@ python
 ```python
 import awkward_kaitai
 
-animal = awkward_kaitai.Reader("./libanimal.so") # pass the path of the shared file
+animal = awkward_kaitai.Reader("./src-animal/libanimal.so") # pass the path of the shared file
 awkward_array = animal.load("example_data/data/animal.raw")
 
-print(ak.to_list(awkward_array))
+print(awkward_array.to_list())
 ```
 
 #### Output
