@@ -1,3 +1,6 @@
+import sys
+
+sys.path.append("local")
 import awkward_kaitai
 
 
