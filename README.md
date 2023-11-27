@@ -111,5 +111,5 @@ print(awkward_array.to_list())
 #### Output
 
 ```python
-[{'entry': [{'str_len': 3, 'species': 'cat', 'age': 5, 'weight': 12}]}, {'entry': [{'str_len': 3, 'species': 'dog', 'age': 3, 'weight': 43}]}, {'entry': [{'str_len': 6, 'species': 'turtle', 'age': 10, 'weight': 5}]}]
+[{'animalA__Zentry': [{'animal_entryA__Zstr_len': 3, 'animal_entryA__Zspecies': 'cat', 'animal_entryA__Zage': 5, 'animal_entryA__Zweight': 12}, {'animal_entryA__Zstr_len': 3, 'animal_entryA__Zspecies': 'dog', 'animal_entryA__Zage': 3, 'animal_entryA__Zweight': 43}, {'animal_entryA__Zstr_len': 6, 'animal_entryA__Zspecies': 'turtle', 'animal_entryA__Zage': 10, 'animal_entryA__Zweight': 5}]}]
 ```
