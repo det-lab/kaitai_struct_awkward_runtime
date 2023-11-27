@@ -4,7 +4,7 @@ JAVA_CLASSES = kaitai_struct_compiler/jvm/target/scala-2.12/classes/io/kaitai/st
 all: src-animal/libanimal.so
 
 src-animal/libanimal.so: src-animal/animal.cpp $(BUILD)
-	local/bin/awkward-kaitai-build src-animal/animal.cpp -b build
+	PYTHONPATH=$$PYTHONPATH:local $(BUILD) src-animal/animal.cpp -b build
 
 src-animal/animal.cpp: $(JAVA_CLASSES)
 	./kaitai-struct-compiler -t awkward --outdir src-animal example_data/schemas/animal.ksy
