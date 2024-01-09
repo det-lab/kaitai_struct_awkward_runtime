@@ -7,7 +7,8 @@ ifneq (,$(wildcard /proc/sys/fs/binfmt_misc/WSLInterop))
 else
   JAR_PATH = /usr/share/kaitai-struct-compiler/lib/*
 endif
-all: src-animal/libanimal.so
+KSY := animal fake
+LIBS := $(foreach ksy,$(KSY),test_artifacts/lib$(ksy).so)
 
 test_artifacts/lib%.so: test_artifacts/%.cpp $(BUILD)
 	PYTHONPATH=$$PYTHONPATH:local $(BUILD) $< -b build
@@ -21,7 +22,7 @@ test_artifacts/%.cpp: example_data/schemas/%.ksy $(JAVA_CLASSES)
 $(JAVA_CLASSES):
 	cd kaitai_struct_compiler && sbt package
 
-test: test_artifacts/libanimal.so
+test: $(LIBS)
 	pytest
 
 list:
