@@ -7,7 +7,7 @@ ifneq (,$(wildcard /proc/sys/fs/binfmt_misc/WSLInterop))
 else
   JAR_PATH = /usr/share/kaitai-struct-compiler/lib/*
 endif
-KSY := animal fake index_option numpy
+KSY := animal fake index_option numpy pixie4e
 LIBS := $(foreach ksy,$(KSY),test_artifacts/lib$(ksy).so)
 
 test_artifacts/lib%.so: test_artifacts/%.cpp $(BUILD)
