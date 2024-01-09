@@ -8,7 +8,7 @@ import awkward_kaitai
 
 def test_animal():
     animal = awkward_kaitai.Reader(
-        "src-animal/libanimal.so"
+        "test_artifacts/libanimal.so"
     )  # pass the path of the shared file
     awkward_array = animal.load("example_data/data/animal.raw")
 
