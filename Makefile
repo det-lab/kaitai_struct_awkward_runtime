@@ -7,7 +7,9 @@ ifneq (,$(wildcard /proc/sys/fs/binfmt_misc/WSLInterop))
 else
   JAR_PATH = /usr/share/kaitai-struct-compiler/lib/*
 endif
+
 KSY := animal fake index_option numpy pixie4e records scdms hello_world scdms_v8
+
 LIBS := $(foreach ksy,$(KSY),test_artifacts/lib$(ksy).so)
 
 test_artifacts/lib%.so: test_artifacts/%.cpp $(BUILD)
