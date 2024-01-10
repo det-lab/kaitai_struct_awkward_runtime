@@ -21,6 +21,8 @@ def test_index_option():
         awkward_array.index_optionA__Zbank_header.to_numpy(), expected_array
     )
 
+    # Element 0 has a different shape because it is a ListOffsetBuilder<NumpyBuilder>
+    # instead of just NumpyBuilder
     expected_array_bank1 = {
         "0": np.ma.masked_array(data=[], mask=[], dtype=np.uint8).reshape((1, 0)),
         "1": np.ma.masked_array(data=[0], mask=[True], dtype=np.uint16),
