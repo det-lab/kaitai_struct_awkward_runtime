@@ -18,5 +18,5 @@ def test_pixie4e():
     with gzip.open("tests/pixie4e.json.gz", "rb") as f:
         expected_content = json.load(f)
 
-    for each_arr, each_expected in zip( awkward_array.to_list(), expected_content):
+    for each_arr, each_expected in zip(awkward_array.to_list(), expected_content):
         assert each_arr == each_expected
