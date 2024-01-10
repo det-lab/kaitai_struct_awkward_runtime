@@ -52,7 +52,7 @@ if(NOT awkward-headers_POPULATED)
                    EXCLUDE_FROM_ALL)
 endif()
 
-file(GLOB KAITAI_SOURCE_FILES CONFIGURE_DEPENDS "${KAITAI_DIR}/*.cpp")
+file(GLOB KAITAI_SOURCE_FILES CONFIGURE_DEPENDS "${KAITAI_DIR}/${KAITAI_NAME}.cpp")
 
 # Create a shared library
 add_library("${KAITAI_NAME}" SHARED ${KAITAI_SOURCE_FILES})
