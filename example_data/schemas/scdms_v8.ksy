@@ -1,5 +1,5 @@
 meta:
-  id: test
+  id: scdms_v8
   endian: le
 
 enums:
