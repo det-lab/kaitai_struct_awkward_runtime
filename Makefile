@@ -19,7 +19,7 @@ $(BUILD):
 test_artifacts/%.cpp: example_data/schemas/%.ksy $(JAVA_CLASSES)
 	java -cp kaitai_struct_compiler/jvm/target/scala-2.12/kaitai-struct-compiler_2.12-0.11-SNAPSHOT.jar:$(JAR_PATH) io.kaitai.struct.JavaMain -t awkward --outdir test_artifacts $<
 
-$(JAVA_CLASSES):
+$(JAVA_CLASSES): kaitai_struct_compiler/shared/src/main/scala/io/kaitai/struct/languages/AwkwardCompiler.scala
 	cd kaitai_struct_compiler && sbt package
 
 test: $(LIBS)
