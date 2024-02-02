@@ -13,7 +13,7 @@ LIBS := $(foreach ksy,$(KSY),test_artifacts/lib$(ksy).so)
 test_artifacts/lib%.so: test_artifacts/%.cpp $(BUILD)
 	PYTHONPATH=$$PYTHONPATH:local $(BUILD) $< -b build
 
-$(BUILD):
+$(BUILD): kaitai_struct_compiler/shared/src/main/scala/io/kaitai/struct/languages/AwkwardCompiler.scala
 	pip install . -t local
 
 test_artifacts/%.cpp: example_data/schemas/%.ksy $(JAVA_CLASSES)
