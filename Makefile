@@ -6,7 +6,7 @@ JAVA_CLASSES = kaitai_struct_compiler/jvm/target/scala-2.12/classes/io/kaitai/st
 # This path only works on Linux, need to make it compatible with WSL as well
 JAR_PATH = /usr/share/kaitai-struct-compiler/lib/*
 
-KSY := animal fake index_option numpy pixie4e records scdms hello_world scdms_v8
+KSY := scdms
 
 LIBS := $(foreach ksy,$(KSY),test_artifacts/lib$(ksy).so)
 
