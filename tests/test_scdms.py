@@ -11,7 +11,7 @@ import awkward_kaitai
 
 def test_scdms():
     reader = awkward_kaitai.Reader("test_artifacts/libscdms.so")
-    awkward_array = reader.load("example_data/data/scdms_v_two_trigger.bin")
+    awkward_array = reader.load("example_data/data/simple_enum.bin")
 
     with gzip.open("tests/scdms.json.gz", "rb") as f:
         expected_content = json.load(f)
