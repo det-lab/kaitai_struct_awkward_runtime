@@ -1,6 +1,9 @@
 meta:
   id: simple_enum
   # simplified version of `scdms.ksy` only keeping trigger types enum
+  # data file created with:
+  # import numpy as np
+  # np.array([3, 4], dtype="<u4").tofile("simple_enum.bin")
   endian: le
   license: MIT
   ks-version: 0.8
