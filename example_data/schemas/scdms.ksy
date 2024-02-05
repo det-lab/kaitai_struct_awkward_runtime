@@ -8,15 +8,8 @@ meta:
 
 seq:
 
-  - id: scdms_hdr
-    type: scdms_header
-
   - id: n_triggers
-    type:
-      switch-on: scdms_hdr.format_version
-      cases:
-        1: v_one_trigger
-        2: v_one_trigger
+    type: v_one_trig_meta
 
 enums:
 
@@ -37,22 +30,6 @@ enums:
       id: eorts   # end of run test signal
 
 types:
-
-  scdms_header:
-
-    seq:
-      - id: packed
-        type: u4
-
-    instances:
-
-      format_version:
-        value: ((packed & 0x0f_ff_f0_00) >> 12)
-
-  v_one_trigger:
-    seq:
-      - id: trigger_meta
-        type: v_one_trig_meta
 
   v_one_trig_meta:
     seq:
