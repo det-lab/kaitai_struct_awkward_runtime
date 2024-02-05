@@ -6,7 +6,7 @@ JAVA_CLASSES = kaitai_struct_compiler/jvm/target/scala-2.12/classes/io/kaitai/st
 # This path only works on Linux, need to make it compatible with WSL as well
 JAR_PATH = /usr/share/kaitai-struct-compiler/lib/*
 
-KSY := animal fake index_option numpy pixie4e records scdms hello_world scdms_v8
+KSY := animal fake index_option numpy pixie4e records scdms hello_world scdms_v8 simple_enum
 
 LIBS := $(foreach ksy,$(KSY),test_artifacts/lib$(ksy).so)
 
@@ -23,7 +23,7 @@ $(JAVA_CLASSES): kaitai_struct_compiler/shared/src/main/scala/io/kaitai/struct/l
 	cd kaitai_struct_compiler && sbt package
 
 test: $(LIBS)
-	pytest tests/test_scdms.py
+	pytest
 
 list:
 	@LC_ALL=C $(MAKE) -pRrq -f $(firstword $(MAKEFILE_LIST)) : 2>/dev/null | awk -v RS= -F: '/(^|\n)# Files(\n|$$)/,/(^|\n)# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | sort | grep -E -v -e '^[^[:alnum:]]' -e '^$@$$'
