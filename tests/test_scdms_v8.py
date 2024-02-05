@@ -3,10 +3,10 @@ from __future__ import annotations
 import sys
 
 sys.path.append("local")
-import awkward_kaitai
-
-import json
 import gzip
+import json
+
+import awkward_kaitai
 
 
 def test_scdms_v8():

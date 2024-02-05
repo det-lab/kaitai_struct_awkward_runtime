@@ -3,8 +3,8 @@ from __future__ import annotations
 import sys
 
 sys.path.append("local")
-import numpy as np
 import awkward_kaitai
+import numpy as np
 
 
 def test_fake():
