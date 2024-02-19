@@ -14,7 +14,27 @@ def test_simple_enum():
     reader = awkward_kaitai.Reader("test_artifacts/libsimple_enum.so")
     awkward_array = reader.load("example_data/data/simple_enum.bin")
 
-    assert awkward_array["simple_enumA__Zn_triggers"][0]["v_one_trig_metaA__Ztrigger_id"] == 3
-    assert type(awkward_array["simple_enumA__Zn_triggers"][0]["v_one_trig_metaA__Ztrigger_id"]) == np.uint32
-    assert awkward_array["simple_enumA__Zn_triggers"][0]["v_one_trig_metaA__Ztrigger_type"] == 4
-    assert type(awkward_array["simple_enumA__Zn_triggers"][0]["v_one_trig_metaA__Ztrigger_type"]) == np.uint32
+    assert (
+        awkward_array["simple_enumA__Zn_triggers"][0]["v_one_trig_metaA__Ztrigger_id"]
+        == 3
+    )
+    assert (
+        type(
+            awkward_array["simple_enumA__Zn_triggers"][0][
+                "v_one_trig_metaA__Ztrigger_id"
+            ]
+        )
+        == np.uint32
+    )
+    assert (
+        awkward_array["simple_enumA__Zn_triggers"][0]["v_one_trig_metaA__Ztrigger_type"]
+        == 4
+    )
+    assert (
+        type(
+            awkward_array["simple_enumA__Zn_triggers"][0][
+                "v_one_trig_metaA__Ztrigger_type"
+            ]
+        )
+        == np.uint32
+    )
