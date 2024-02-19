@@ -10,6 +10,11 @@ KSY := animal fake index_option numpy pixie4e records scdms hello_world scdms_v8
 
 LIBS := $(foreach ksy,$(KSY),test_artifacts/lib$(ksy).so)
 
+compile_test: # define testcase environment variable
+	rm -f test_artifacts/lib$(testcase).so
+	PYTHONPATH=$$PYTHONPATH:local $(BUILD) test_artifacts/$(testcase).cpp -b build
+	pytest tests/test_$(testcase).py
+
 test_artifacts/lib%.so: test_artifacts/%.cpp $(BUILD)
 	PYTHONPATH=$$PYTHONPATH:local $(BUILD) $< -b build
 
