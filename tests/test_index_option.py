@@ -34,7 +34,7 @@ def test_index_option():
         assert arr.dtype == expected_array_bank1[field].dtype
 
     expected_array_bank2 = np.ma.masked_array(
-        data=[("Bank", 655361, 1802395970)],
+        data=[("Bank", 3, 2)],
         mask=[(False, False, False)],
         fill_value=("N/A", 999999, 999999),
         dtype=[
