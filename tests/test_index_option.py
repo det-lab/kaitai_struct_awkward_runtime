@@ -23,7 +23,7 @@ def test_index_option():
     # Element 0 has a different shape because it is a ListOffsetBuilder<NumpyBuilder>
     # instead of just NumpyBuilder
     expected_array_bank1 = {
-        "0": np.ma.masked_array(data=[], mask=[], dtype=np.uint8).reshape((1, 0)),
+        "0": np.ma.masked_array(data=[0], mask=[True], dtype="<U1", fill_value="N/A"),
         "1": np.ma.masked_array(data=[0], mask=[True], dtype=np.uint16),
     }
     expected_array_bank1["2"] = expected_array_bank1["1"]
