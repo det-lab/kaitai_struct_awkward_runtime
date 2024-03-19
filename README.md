@@ -78,10 +78,10 @@ cd ../
 
 ### 5. Install the library
 ```
-pip install .
+pip install awkward-kaitai
 ```
 
-### 6. Build `awkward_kaitai` by passing the path of the main `.cpp` from the generated code.
+### 6. Build `awkward-kaitai` by passing the path of the main `.cpp` from the generated code.
 ```
 awkward-kaitai-build src-animal/animal.cpp -b build
 ```
@@ -105,7 +105,7 @@ import awkward_kaitai
 animal = awkward_kaitai.Reader("./src-animal/libanimal.so") # pass the path of the shared file
 awkward_array = animal.load("example_data/data/animal.raw")
 
-print(awkward_array.to_list())
+awkward_array.to_list()
 ```
 
 #### Output
