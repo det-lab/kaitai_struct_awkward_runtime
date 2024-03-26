@@ -115,6 +115,7 @@ def build_with_cmake(
                 str(build_path),
                 f"-DKAITAI_MAIN_FILE={main_path.resolve()}",
                 f"-DCMAKE_INSTALL_PREFIX={dest_path.resolve()}",
+                "-DCMAKE_BUILD_TYPE=Debug",
                 f"-DAWKWARD_VERSION={get_awkward_version()}",
             ],
             check=True,
