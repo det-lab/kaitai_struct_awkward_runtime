@@ -23,10 +23,12 @@ def test_index_option():
     # Element 0 has a different shape because it is a ListOffsetBuilder<NumpyBuilder>
     # instead of just NumpyBuilder
     expected_array_bank1 = {
-        "0": np.ma.masked_array(data=[0], mask=[True], dtype="<U1", fill_value="N/A"),
-        "1": np.ma.masked_array(data=[0], mask=[True], dtype=np.uint16),
+        "bank16A__Zname": np.ma.masked_array(
+            data=[0], mask=[True], dtype="<U1", fill_value="N/A"
+        ),
+        "bank16A__Ztype": np.ma.masked_array(data=[0], mask=[True], dtype=np.uint16),
     }
-    expected_array_bank1["2"] = expected_array_bank1["1"]
+    expected_array_bank1["bank16A__Zsize"] = expected_array_bank1["bank16A__Ztype"]
 
     for field in expected_array_bank1.keys():
         arr = awkward_array.index_optionA__Zbank1[field].to_numpy()
