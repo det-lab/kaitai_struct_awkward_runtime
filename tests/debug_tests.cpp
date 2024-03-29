@@ -1,6 +1,6 @@
 // Select the test case by choosing the header and the test file
-#include "animal.h"
-#define TESTFILE "../example_data/data/animal.raw"
+#include "index_option.h"
+#define TESTFILE "../example_data/data/index_option.raw"
 
 int main()
 {
