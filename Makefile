@@ -15,6 +15,8 @@ compile_test: # define testcase environment variable
 	PYTHONPATH=$$PYTHONPATH:local $(BUILD) test_artifacts/$(testcase).cpp -b build
 	pytest tests/test_$(testcase).py
 
+cpp: $(foreach ksy,$(KSY),test_artifacts/$(ksy).cpp)
+
 test_artifacts/lib%.so: test_artifacts/%.cpp $(BUILD)
 	PYTHONPATH=$$PYTHONPATH:local $(BUILD) $< -b build
 
