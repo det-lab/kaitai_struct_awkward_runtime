@@ -1,6 +1,7 @@
 .PHONY: list test all clean
 
-BUILD = local/bin/awkward-kaitai-build
+# Remove --debug to strip debugging symbols from the library
+BUILD = local/bin/awkward-kaitai-build --debug
 JAVA_CLASSES = kaitai_struct_compiler/jvm/target/scala-2.12/classes/io/kaitai/struct
 
 # This path only works on Linux, need to make it compatible with WSL as well
