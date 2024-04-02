@@ -11,11 +11,11 @@
                 "-o",
                 "${workspaceFolder}/tests/debug_tests",
                 "-I",
-                "../test_artifacts",
+                "${workspaceFolder}/test_artifacts",
                 "-I",
-                "../build/build/_deps/kaitai_struct_cpp_stl_runtime-src",
+                "${workspaceFolder}/build/build/_deps/kaitai_struct_cpp_stl_runtime-src",
                 "-I",
-                "../local/awkward/_connect/header-only/",
+                "${workspaceFolder}/local/awkward/_connect/header-only/",
                 "-lindex_option",
                 "-lanimal",
                 "-lfake",
@@ -27,7 +27,7 @@
                  "-lscdms_v8",
                  "-lsimple_enum",
                 "-L",
-                "../test_artifacts"
+                "${workspaceFolder}/test_artifacts"
             ],
             "options": {
                 "cwd": "${fileDirname}"
