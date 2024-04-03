@@ -28,7 +28,7 @@ def test_simple_enum():
     )
     assert (
         awkward_array["simple_enumA__Zn_triggers"][0]["v_one_trig_metaA__Ztrigger_type"]
-        == 4
+        == "eorr" # Index 4 of the enum
     )
     assert (
         type(
@@ -36,5 +36,5 @@ def test_simple_enum():
                 "v_one_trig_metaA__Ztrigger_type"
             ]
         )
-        == np.uint32
+        == str
     )
