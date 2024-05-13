@@ -12,6 +12,7 @@ seq:
 
   - id: n_triggers
     type: v_one_trig_meta
+    repeat: eos
 
 enums:
 
