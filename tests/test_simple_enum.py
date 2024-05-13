@@ -15,26 +15,18 @@ def test_simple_enum():
     awkward_array = reader.load("example_data/data/simple_enum.bin")
 
     assert (
-        awkward_array["simple_enumA__Zn_triggers"][0]["v_one_trig_metaA__Ztrigger_id"]
-        == 3
+        awkward_array["simple_enumA__Zn_triggers"][0]["v_one_trig_metaA__Ztrigger_id"][0]
+        == 0
     )
-    assert (
-        type(
+    assert (str(
             awkward_array["simple_enumA__Zn_triggers"][0][
                 "v_one_trig_metaA__Ztrigger_id"
-            ]
-        )
-        == np.uint32
+            ].type.content)
+        == "uint32"
     )
-    assert (
-        awkward_array["simple_enumA__Zn_triggers"][0]["v_one_trig_metaA__Ztrigger_type"]
-        == "eorr" # Index 4 of the enum
-    )
-    assert (
-        type(
-            awkward_array["simple_enumA__Zn_triggers"][0][
-                "v_one_trig_metaA__Ztrigger_type"
-            ]
-        )
-        == str
-    )
+    assert awkward_array.simple_enumA__Zn_triggers.v_one_trig_metaA__Ztrigger_id.to_list() == [[0, 0, 0, 0, 0, 0]]
+
+    assert awkward_array.simple_enumA__Zn_triggers.v_one_trig_metaA__Ztrigger_type.to_list() == [['physics', 'physics', 'physics', 'physics', 'borr', 'irr']]
+
+if __name__ == "__main__":
+    test_simple_enum()
