@@ -18,7 +18,14 @@ compile_test: # define testcase environment variable
 
 cpp: $(foreach ksy,$(KSY),test_artifacts/$(ksy).cpp)
 
-test_artifacts/lib%.so: test_artifacts/%.cpp $(BUILD)
+inject_layoutbuilder:
+	# use a newer LayoutBuilder.h
+	# we need to trigger the compiler to prepare all the build files
+	# and then overwrite the header
+	PYTHONPATH=$$PYTHONPATH:local $(BUILD) test_artifacts/animal.cpp -b build
+	wget -O build/build/_deps/awkward-headers-src/layout-builder/awkward/LayoutBuilder.h https://github.com/scikit-hep/awkward/raw/fix_max_index_init/header-only/layout-builder/awkward/LayoutBuilder.h
+
+test_artifacts/lib%.so: test_artifacts/%.cpp $(BUILD) inject_layoutbuilder
 	PYTHONPATH=$$PYTHONPATH:local $(BUILD) $< -b build
 
 $(BUILD): kaitai_struct_compiler/shared/src/main/scala/io/kaitai/struct/languages/AwkwardCompiler.scala
