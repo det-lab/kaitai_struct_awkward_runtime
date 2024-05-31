@@ -42,7 +42,7 @@ types:
 ### 2. Clone `kaitai_struct_awkward_runtime` repository:
 
 ```
-git clone --recursive https://github.com/ManasviGoyal/kaitai_struct_awkward_runtime.git
+git clone --recursive https://github.com/det-lab/kaitai_struct_awkward_runtime.git
 ```
 
 ```
