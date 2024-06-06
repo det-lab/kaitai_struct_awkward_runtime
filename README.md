@@ -83,6 +83,11 @@ pip install awkward-kaitai
 ```
 
 ### 6. Build `awkward-kaitai` by passing the path of the main `.cpp` from the generated code.
+In order to get the file to build, you may need to run
+```
+echo "export PATH=$PATH:/whatever/path" >> ~/.bashrc
+```
+
 ```
 awkward-kaitai-build src-animal/animal.cpp -b build
 ```
