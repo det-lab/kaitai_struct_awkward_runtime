@@ -68,6 +68,7 @@ sbt package
 
 ```
 cd ../
+chmod u+x kaitai-struct-compiler
 ```
 
 ### 4. Generate the source and header files for Awkward target
