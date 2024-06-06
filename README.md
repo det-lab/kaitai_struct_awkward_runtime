@@ -83,9 +83,9 @@ pip install awkward-kaitai
 ```
 
 ### 6. Build `awkward-kaitai` by passing the path of the main `.cpp` from the generated code.
-In order to get the file to build, you may need to run
+If python gives a warning about the installation not being on the path, in order to get the file to build you may need to run:
 ```
-echo "export PATH=$PATH:/whatever/path" >> ~/.bashrc
+echo "export PATH=$PATH:/whatever/path/python/says" >> ~/.bashrc
 ```
 
 ```
