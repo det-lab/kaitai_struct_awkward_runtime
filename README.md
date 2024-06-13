@@ -68,6 +68,7 @@ sbt package
 
 ```
 cd ../
+chmod u+x kaitai-struct-compiler
 ```
 
 ### 4. Generate the source and header files for Awkward target
@@ -82,6 +83,11 @@ pip install awkward-kaitai
 ```
 
 ### 6. Build `awkward-kaitai` by passing the path of the main `.cpp` from the generated code.
+If python gives a warning about the installation not being on the path, in order to get the file to build you may need to run:
+```
+echo "export PATH=$PATH:/whatever/path/python/says" >> ~/.bashrc
+```
+
 ```
 awkward-kaitai-build src-animal/animal.cpp -b build
 ```
