@@ -309,8 +309,12 @@ private:
     pixie_eor_t* m_file_footer;
     pixie4e_t* m__root;
     kaitai::kstruct* m__parent;
+    std::string m__raw_file_header;
+    kaitai::kstream* m__io__raw_file_header;
     std::string m__raw_events;
     kaitai::kstream* m__io__raw_events;
+    std::string m__raw_file_footer;
+    kaitai::kstream* m__io__raw_file_footer;
 
 public:
     pixie4e_header_t* file_header() const { return m_file_header; }
@@ -318,8 +322,12 @@ public:
     pixie_eor_t* file_footer() const { return m_file_footer; }
     pixie4e_t* _root() const { return m__root; }
     kaitai::kstruct* _parent() const { return m__parent; }
+    std::string _raw_file_header() const { return m__raw_file_header; }
+    kaitai::kstream* _io__raw_file_header() const { return m__io__raw_file_header; }
     std::string _raw_events() const { return m__raw_events; }
     kaitai::kstream* _io__raw_events() const { return m__io__raw_events; }
+    std::string _raw_file_footer() const { return m__raw_file_footer; }
+    kaitai::kstream* _io__raw_file_footer() const { return m__io__raw_file_footer; }
     Pixie4eBuilderType pixie4e_builder;
 };
 

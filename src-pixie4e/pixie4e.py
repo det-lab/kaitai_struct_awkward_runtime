@@ -1,4 +1,5 @@
 # This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+# type: ignore
 
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
@@ -15,11 +16,15 @@ class Pixie4e(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.file_header = Pixie4e.Pixie4eHeader(self._io, self, self._root)
+        self._raw_file_header = self._io.read_bytes(64)
+        _io__raw_file_header = KaitaiStream(BytesIO(self._raw_file_header))
+        self.file_header = Pixie4e.Pixie4eHeader(_io__raw_file_header, self, self._root)
         self._raw_events = self._io.read_bytes((self._io.size() - 128))
         _io__raw_events = KaitaiStream(BytesIO(self._raw_events))
         self.events = Pixie4e.Event(_io__raw_events, self, self._root)
-        self.file_footer = Pixie4e.PixieEor(self._io, self, self._root)
+        self._raw_file_footer = self._io.read_bytes(64)
+        _io__raw_file_footer = KaitaiStream(BytesIO(self._raw_file_footer))
+        self.file_footer = Pixie4e.PixieEor(_io__raw_file_footer, self, self._root)
 
     class Event(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):

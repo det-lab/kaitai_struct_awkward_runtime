@@ -58,9 +58,11 @@ pixie4e_t::pixie4e_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, pixie4e
     m__parent = p__parent;
     m__root = this;
     m_file_header = 0;
+    m__io__raw_file_header = 0;
     m_events = 0;
     m__io__raw_events = 0;
     m_file_footer = 0;
+    m__io__raw_file_footer = 0;
 
     pixie4e_builder.set_fields(pixie4e_fields_map);
 
@@ -74,13 +76,17 @@ pixie4e_t::pixie4e_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, pixie4e
 
 void pixie4e_t::_read() {
     auto& pixie4e_header_recordbuilder = pixie4e_builder.content<Field_pixie4e::pixie4eA__Zfile_header>();
-    m_file_header = new pixie4e_header_t(pixie4e_header_recordbuilder, m__io, this, m__root);
+    m__raw_file_header = m__io->read_bytes(64);
+    m__io__raw_file_header = new kaitai::kstream(m__raw_file_header);
+    m_file_header = new pixie4e_header_t(pixie4e_header_recordbuilder, m__io__raw_file_header, this, m__root);
     auto& event_recordbuilder = pixie4e_builder.content<Field_pixie4e::pixie4eA__Zevents>();
     m__raw_events = m__io->read_bytes((_io()->size() - 128));
     m__io__raw_events = new kaitai::kstream(m__raw_events);
     m_events = new event_t(event_recordbuilder, m__io__raw_events, this, m__root);
     auto& pixie_eor_recordbuilder = pixie4e_builder.content<Field_pixie4e::pixie4eA__Zfile_footer>();
-    m_file_footer = new pixie_eor_t(pixie_eor_recordbuilder, m__io, this, m__root);
+    m__raw_file_footer = m__io->read_bytes(64);
+    m__io__raw_file_footer = new kaitai::kstream(m__raw_file_footer);
+    m_file_footer = new pixie_eor_t(pixie_eor_recordbuilder, m__io__raw_file_footer, this, m__root);
 }
 
 pixie4e_t::~pixie4e_t() {
@@ -88,6 +94,9 @@ pixie4e_t::~pixie4e_t() {
 }
 
 void pixie4e_t::_clean_up() {
+    if (m__io__raw_file_header) {
+        delete m__io__raw_file_header; m__io__raw_file_header = 0;
+    }
     if (m_file_header) {
         delete m_file_header; m_file_header = 0;
     }
@@ -96,6 +105,9 @@ void pixie4e_t::_clean_up() {
     }
     if (m_events) {
         delete m_events; m_events = 0;
+    }
+    if (m__io__raw_file_footer) {
+        delete m__io__raw_file_footer; m__io__raw_file_footer = 0;
     }
     if (m_file_footer) {
         delete m_file_footer; m_file_footer = 0;
