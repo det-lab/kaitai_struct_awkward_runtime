@@ -8,6 +8,7 @@ seq:
 
   - id: file_header
     type: pixie4e_header
+    size: 64
 
   - id: events
     type: event
@@ -15,6 +16,7 @@ seq:
 
   - id: file_footer
     type: pixie_eor
+    size: 64
 
 
 types:
@@ -77,9 +79,7 @@ types:
         type: channel_header
 
       - id: data
-        type: u2
-        repeat: expr
-        repeat-expr: header.num_trace_blks * _root.file_header.blk_size
+        size: 2 * header.num_trace_blks * _root.file_header.blk_size
 
 
   channel_header:
@@ -121,14 +121,10 @@ types:
         type: u2
 
       - id: extended_psa_values
-        type: u2
-        repeat: expr
-        repeat-expr: 0x4
+        size: 2 * 0x4
 
       - id: reserved
-        type: u2
-        repeat: expr
-        repeat-expr: 0x10
+        size: 2 * 0x10
 
     instances:
       timestamp_full:
