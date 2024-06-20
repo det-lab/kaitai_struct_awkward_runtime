@@ -119,3 +119,7 @@ awkward_array.to_list()
 ```python
 [{'animalA__Zentry': [{'animal_entryA__Zstr_len': 3, 'animal_entryA__Zspecies': 'cat', 'animal_entryA__Zage': 5, 'animal_entryA__Zweight': 12}, {'animal_entryA__Zstr_len': 3, 'animal_entryA__Zspecies': 'dog', 'animal_entryA__Zage': 3, 'animal_entryA__Zweight': 43}, {'animal_entryA__Zstr_len': 6, 'animal_entryA__Zspecies': 'turtle', 'animal_entryA__Zage': 10, 'animal_entryA__Zweight': 5}]}]
 ```
+
+## Related Papers and Talks
+1. [Describe Data to get Science-Data-Ready Tooling: Awkward as a Target for Kaitai Struct YAML](https://indico.cern.ch/event/1330797/contributions/5796564/), Advanced Computing and Analysis Techniques for Physics Research Workshop 2024, New York, US.
+2. [Awkward Target for Kaitai Struct](https://indico.cern.ch/event/1252095/contributions/5592420/), PyHEP Users Workshop 2023.
