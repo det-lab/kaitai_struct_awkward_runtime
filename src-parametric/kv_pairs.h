@@ -19,6 +19,10 @@ template<class PRIMITIVE, class BUILDER>
 using ListOffsetBuilder = awkward::LayoutBuilder::ListOffset<PRIMITIVE, BUILDER>;
 template<class PRIMITIVE>
 using NumpyBuilder = awkward::LayoutBuilder::Numpy<PRIMITIVE>;
+template<class PRIMITIVE>
+using StringBuilder = awkward::LayoutBuilder::String<PRIMITIVE>;
+template<class PRIMITIVE, class BUILDER>
+using IndexedBuilder = awkward::LayoutBuilder::Indexed<PRIMITIVE, BUILDER>;
 template<class PRIMITIVE, class BUILDER>
 using IndexedOptionBuilder = awkward::LayoutBuilder::IndexedOption<PRIMITIVE, BUILDER>;
 template<class... BUILDERS>
@@ -30,12 +34,12 @@ enum Field_kv_pair : std::size_t {kv_pairA__Zkey, kv_pairA__Zvalue};
 using Kv_pairsBuilderType =
 	RecordBuilder<
 		RecordField<Field_kv_pairs::kv_pairsA__Zshort_pairs, ListOffsetBuilder<int64_t, RecordBuilder<
-			RecordField<Field_kv_pair::kv_pairA__Zkey, ListOffsetBuilder<int64_t, NumpyBuilder<uint8_t>>>,
-			RecordField<Field_kv_pair::kv_pairA__Zvalue, ListOffsetBuilder<int64_t, NumpyBuilder<uint8_t>>>
+			RecordField<Field_kv_pair::kv_pairA__Zkey, StringBuilder<int64_t>>,
+			RecordField<Field_kv_pair::kv_pairA__Zvalue, StringBuilder<int64_t>>
 		>>>,
 		RecordField<Field_kv_pairs::kv_pairsA__Zlong_pairs, ListOffsetBuilder<int64_t, RecordBuilder<
-			RecordField<Field_kv_pair::kv_pairA__Zkey, ListOffsetBuilder<int64_t, NumpyBuilder<uint8_t>>>,
-			RecordField<Field_kv_pair::kv_pairA__Zvalue, ListOffsetBuilder<int64_t, NumpyBuilder<uint8_t>>>
+			RecordField<Field_kv_pair::kv_pairA__Zkey, StringBuilder<int64_t>>,
+			RecordField<Field_kv_pair::kv_pairA__Zvalue, StringBuilder<int64_t>>
 		>>>
 	>;
 
@@ -64,7 +68,7 @@ public:
 
     public:
 
-        kv_pair_t(uint16_t p_len_key, Kv_pairBuilderType builder, kaitai::kstream* p__io, kv_pairs_t* p__parent = 0, kv_pairs_t* p__root = 0);
+        kv_pair_t(Kv_pairBuilderType builder, uint16_t p_len_key, kaitai::kstream* p__io, kv_pairs_t* p__parent = 0, kv_pairs_t* p__root = 0);
 
     private:
         void _read();
@@ -105,9 +109,6 @@ public:
 
 #ifndef USE_KV_PAIRS_
 #define USE_KV_PAIRS_
-
-std::map<std::string, Kv_pairsBuilderType*> builder_map;
-std::vector<std::string>* builder_keys;
 
 Kv_pairsBuilderType* load(std::string file_path);
 

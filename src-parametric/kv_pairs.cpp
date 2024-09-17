@@ -33,7 +33,7 @@ void kv_pairs_t::_read() {
     short_pairs_listoffsetbuilder.begin_list();
     for (int i = 0; i < l_short_pairs; i++) {
         auto& kv_pair_recordbuilder = kv_pairs_builder.content<Field_kv_pairs::kv_pairsA__Zshort_pairs>().content();
-        m_short_pairs->push_back(new kv_pair_t(3, kv_pair_recordbuilder, m__io, this, m__root));
+        m_short_pairs->push_back(new kv_pair_t(kv_pair_recordbuilder, 3, m__io, this, m__root));
     }
     short_pairs_listoffsetbuilder.end_list();
     m_long_pairs = new std::vector<kv_pair_t*>();
@@ -42,7 +42,7 @@ void kv_pairs_t::_read() {
     long_pairs_listoffsetbuilder.begin_list();
     for (int i = 0; i < l_long_pairs; i++) {
         auto& kv_pair_recordbuilder = kv_pairs_builder.content<Field_kv_pairs::kv_pairsA__Zlong_pairs>().content();
-        m_long_pairs->push_back(new kv_pair_t(8, kv_pair_recordbuilder, m__io, this, m__root));
+        m_long_pairs->push_back(new kv_pair_t(kv_pair_recordbuilder, 8, m__io, this, m__root));
     }
     long_pairs_listoffsetbuilder.end_list();
 }
@@ -66,7 +66,7 @@ void kv_pairs_t::_clean_up() {
     }
 }
 
-kv_pairs_t::kv_pair_t::kv_pair_t(uint16_t p_len_key, Kv_pairBuilderType builder, kaitai::kstream* p__io, kv_pairs_t* p__parent, kv_pairs_t* p__root) : kaitai::kstruct(p__io),
+kv_pairs_t::kv_pair_t::kv_pair_t(Kv_pairBuilderType builder, uint16_t p_len_key, kaitai::kstream* p__io, kv_pairs_t* p__parent, kv_pairs_t* p__root) : kaitai::kstruct(p__io),
 	kv_pair_builder(builder) {
     m__parent = p__parent;
     m__root = p__root;
@@ -84,25 +84,11 @@ kv_pairs_t::kv_pair_t::kv_pair_t(uint16_t p_len_key, Kv_pairBuilderType builder,
 
 void kv_pairs_t::kv_pair_t::_read() {
     m_key = kaitai::kstream::bytes_to_str(m__io->read_bytes(len_key()), "ASCII");
-    auto& key_listoffsetbuilder = kv_pair_builder.content<Field_kv_pair::kv_pairA__Zkey>();
-    key_listoffsetbuilder.begin_list();
-    auto& key_builder = key_listoffsetbuilder.content();
-    key_listoffsetbuilder.set_parameters("\"__array__\": \"string\"");
-    key_builder.set_parameters("\"__array__\" : \"char\"");
-    for (int i = 0; i < m_key.length(); i++) {
-        key_builder.append(m_key[i]);
-    }
-    key_listoffsetbuilder.end_list();
+    auto& key_stringbuilder = kv_pair_builder.content<Field_kv_pair::kv_pairA__Zkey>();
+    key_stringbuilder.append(m_key);
     m_value = kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), "ASCII");
-    auto& value_listoffsetbuilder = kv_pair_builder.content<Field_kv_pair::kv_pairA__Zvalue>();
-    value_listoffsetbuilder.begin_list();
-    auto& value_builder = value_listoffsetbuilder.content();
-    value_listoffsetbuilder.set_parameters("\"__array__\": \"string\"");
-    value_builder.set_parameters("\"__array__\" : \"char\"");
-    for (int i = 0; i < m_value.length(); i++) {
-        value_builder.append(m_value[i]);
-    }
-    value_listoffsetbuilder.end_list();
+    auto& value_stringbuilder = kv_pair_builder.content<Field_kv_pair::kv_pairA__Zvalue>();
+    value_stringbuilder.append(m_value);
 }
 
 kv_pairs_t::kv_pair_t::~kv_pair_t() {
@@ -113,6 +99,9 @@ void kv_pairs_t::kv_pair_t::_clean_up() {
 }
 
 #ifdef USE_KV_PAIRS_
+
+std::map<std::string, Kv_pairsBuilderType*> builder_map;
+std::vector<std::string>* builder_keys;
 
 Kv_pairsBuilderType* load(std::string file_path) {
     std::ifstream infile(file_path, std::ifstream::binary);
