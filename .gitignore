@@ -156,3 +156,7 @@ Thumbs.db
 # Common editor files
 *~
 *.swp
+
+test_artifacts
+local
+interactive_test*
