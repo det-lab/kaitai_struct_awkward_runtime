@@ -37,3 +37,9 @@ jobs:
     - name: Test
       run: |
         make test
+    - name: Build and publish docs
+      if: matrix.python-version == '3.11'
+      run: |
+      python -m pip install mkdocs mkdocs-material
+      mkdocs build
+      mkdocs gh-deploy --force
