@@ -90,4 +90,5 @@ This will print the content of the `animal.raw` file:
 
 ## Development
 
-[Setup a development environment](./development.md)
+* [Setup a development environment](./development.md)
+* [Release a new version](./release.md)
