@@ -33,12 +33,17 @@ sudo apt-get install --reinstall ./kaitai-struct-compiler_0.10_all.deb
 ### Install the runtime
 
 ```bash
-pip install kaitai-awkward
+pip install awkward-kaitai
 ```
 
 ## Usage
 
 First we need a test schema and a test file, for example we can take `animal.ksy` and `animal.raw` from the [Kaitai Awkward Struct examples](https://github.com/det-lab/kaitai_struct_awkward_runtime/tree/main/example_data)
+
+```bash
+wget https://github.com/det-lab/kaitai_struct_awkward_runtime/raw/refs/heads/main/example_data/schemas/animal.ksy
+wget https://github.com/det-lab/kaitai_struct_awkward_runtime/raw/refs/heads/main/example_data/data/animal.raw
+```
 
 Then we first compile the schema into C++ sources:
 
