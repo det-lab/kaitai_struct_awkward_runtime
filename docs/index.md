@@ -19,6 +19,8 @@ curl -LO https://github.com/kaitai-io/kaitai_struct_compiler/releases/download/0
 sudo apt-get install ./kaitai-struct-compiler_0.10_all.deb
 ```
 
+This will install Java if not already installed.
+
 ### Install the custom version of the compiler
 
 On Github, go to the [releases page](https://github.com/det-lab/kaitai_struct_awkward_runtime/releases), download the latest `jar` file and overwrite the official Kaitai compiler:
