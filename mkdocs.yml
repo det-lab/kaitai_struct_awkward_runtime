@@ -3,6 +3,3 @@ site_url: https://det-lab.github.io/kaitai_struct_awkward_runtime/
 repo_url: https://github.com/det-lab/kaitai_struct_awkward_runtime
 theme:
   name: material
-nav:
-  - Quick start: 'index.md'
-  - 'Issue Tracker': 'https://github.com/det-lab/kaitai_struct_awkward_runtime/issues'
