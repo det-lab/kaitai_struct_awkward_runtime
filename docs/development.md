@@ -52,6 +52,8 @@ source .env/bin/activate
 make test
 ```
 
+See the documentation in the `Makefile` to understand each step in the process.
+
 ## Test the build step of a single file
 
 When working on the compiler it is useful to force compilation of a single test case,
