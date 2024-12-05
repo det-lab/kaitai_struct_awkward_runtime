@@ -1,5 +1,10 @@
 # How to release the packages
 
+## Test a release on Windows
+
+In case you do not have a local Windows machine for testing, you can use Jetstream 2,
+see [instructions on how to spin up a Windows VM and enable WSL](https://www.zonca.dev/posts/2024-12-04-jetstream-windows)
+
 ## Python package
 
 The Python package is released to PyPI:
