@@ -8,7 +8,7 @@ Kaitai Struct is a declarative language used to describe binary data structures,
 
 This installation procedure if for users only, see below for development instructions.
 
-This has been currently tested only on Ubuntu.
+This has been currently tested only on Ubuntu both natively and under the Windows Subsystem for Linux on Windows Server 2022.
 
 ### Install the Kaitai compiler
 
@@ -32,8 +32,24 @@ You can restore the original compiler by reinstalling the official package:
 sudo apt-get install --reinstall ./kaitai-struct-compiler_0.10_all.deb
 ```
 
+### Install requirements for compiling
+
+In barebone Ubuntu systems, like the default installed in the Windows Subsystem for Linux, you may need to install the following packages:
+
+```bash
+sudo apt-get install build-essential cmake
+```
+
 ### Install the runtime
 
+Generally it is useful to install the runtime in a virtual environment (alternatively `conda` or `uv`):
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+Then install the runtime:
 ```bash
 pip install awkward-kaitai
 ```
@@ -59,13 +75,15 @@ This will generate a `animal.cpp` file that we can compile into a shared library
 awkward-kaitai-build -b build animal.cpp
 ```
 
-This will generate a `libanimal.so` file that we can use to read the data:
+This will generate a `libanimal.so` file that we can use to read the data, in WSL, the shared library is located in `./build/build/libanimal.so`:
 
 ```python
 import awkward_kaitai
 from pprint import pprint
 
 animal = awkward_kaitai.Reader("./libanimal.so")
+# WSL
+# animal = awkward_kaitai.Reader(".build/build/libanimal.so")
 awkward_array = animal.load("animal.raw")
 
 pprint(awkward_array.to_list())

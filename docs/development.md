@@ -1,6 +1,6 @@
 # Setup a local development environment
 
-This has been tested on Ubuntu 20 and 24 systems.
+This has been tested on Ubuntu 20 and 24 systems, and Ubuntu 22 under Windows Subsystem for Linux with Windows Server 2022.
 
 ## Recommended IDE
 
@@ -27,10 +27,10 @@ The default Java in Ubuntu 24 is Java 21, that does not work. You need to instal
 sudo apt install openjdk-17-jdk
 ```
 
-if needed:
+also make sure there are no other versions of Java installed:
 
 ```bash
-sudo apt remove openjdk-21-jdk
+sudo apt remove openjdk-21*
 ```
 
 ## Install SBT
@@ -38,6 +38,14 @@ sudo apt remove openjdk-21-jdk
 Follow the instructions at <https://www.scala-sbt.org/1.x/docs/Installing-sbt-on-Linux.html#Ubuntu+and+other+Debian-based+distributions> to install SBT.
 
 ## Setup the Python environment
+
+Checkout the repository:
+
+```bash
+git clone https://github.com/det-lab/kaitai_struct_awkward_runtime
+```
+
+Create a virtual environment and install the package:
 
 ```bash
 sudo apt install python3-venv
