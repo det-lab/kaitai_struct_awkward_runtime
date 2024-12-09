@@ -45,7 +45,8 @@ dev = [
   "pytest-cov >=3",
 ]
 docs = [
-  "mkdocs-material"
+  "mkdocs-material",
+  "mkdocs-jupyter"
 ]
 
 [project.urls]
