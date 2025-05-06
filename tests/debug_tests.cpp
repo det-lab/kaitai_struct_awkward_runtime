@@ -1,6 +1,6 @@
 // Select the test case by choosing the header and the test file
 #include "scdms.h"
-#define TESTFILE "../example_data/data/scdms_v_two_trigger.bin"
+#define TESTFILE "../example_data/data/minimal_sample.soudan"
 
 int main()
 {
