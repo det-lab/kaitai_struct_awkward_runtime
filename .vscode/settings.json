@@ -1,4 +1,7 @@
 {
-    "cmake.configureOnOpen": false
+    "cmake.configureOnOpen": false,
+    "metals.showInferredType": false,
+     "metals.sbtScript": null
+
     
 }
