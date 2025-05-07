@@ -50,3 +50,5 @@ The Awkward Compiler is implemented in Scala and creates a Java library that gen
 Install the Scala (Metals) extension for VS Code.
 
 Execute the "Run Scala compiler" task in the debug tab of VS Code. This will compile the Scala code and create the `TEST.cpp` file.
+
+You can set breakpoints in the Scala code, and when you run the task, it will stop at those breakpoints. You can then inspect the variables and see what is happening in the Scala code.
