@@ -11,7 +11,7 @@
                 "-ggdb",
                 "-fPIC",
                 "${workspaceFolder}/tests/debug_tests.cpp",
-                "${workspaceFolder}/test_artifacts/simple_enum.cpp",
+                "${workspaceFolder}/test_artifacts/soudan.cpp",
                 "${workspaceFolder}/build/build/_deps/kaitai_struct_cpp_stl_runtime-src/kaitai/kaitaistream.cpp",
                 "-o",
                 "${workspaceFolder}/tests/debug_tests",
