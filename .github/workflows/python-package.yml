@@ -22,6 +22,8 @@ jobs:
       run: |
         curl -LO https://github.com/kaitai-io/kaitai_struct_compiler/releases/download/0.10/kaitai-struct-compiler_0.10_all.deb
         sudo apt-get install -y ./kaitai-struct-compiler_0.10_all.deb
+    - name: Install sbt
+      run: sudo apt-get install sbt
     - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
