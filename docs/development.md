@@ -51,7 +51,7 @@ Create a virtual environment and install the package:
 sudo apt install python3-venv
 python3 -m venv .env
 source .env/bin/activate
-pip install -e .
+pip install -e .[test]
 ```
 
 ## Run the tests
