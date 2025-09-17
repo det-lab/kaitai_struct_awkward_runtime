@@ -27,7 +27,7 @@ jobs:
         sudo mkdir -p /usr/share/keyrings
         echo "deb [signed-by=/usr/share/keyrings/sbt.gpg] https://repo.scala-sbt.org/scalasbt/debian all main" | sudo tee /etc/apt/sources.list.d/sbt.list
         echo "deb [signed-by=/usr/share/keyrings/sbt.gpg] https://repo.scala-sbt.org/scalasbt/debian /" | sudo tee /etc/apt/sources.list.d/sbt_old.list
-        curl -sL https://repo.scala-sbt.org/scalasbt/debian/gpg.key | sudo gpg --batch --yes --dearmor -o /usr/share/keyrings/sbt.gpg
+        curl -fsSL https://repo.scala-sbt.org/scalasbt/debian/gpg | sudo gpg --batch --yes --dearmor -o /usr/share/keyrings/sbt.gpg
         sudo apt-get update
         sudo apt-get install -y sbt
     - uses: actions/checkout@v4
