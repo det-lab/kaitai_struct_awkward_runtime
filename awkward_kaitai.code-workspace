@@ -5,6 +5,9 @@
 		},
 		{
 			"path": "."
+		},
+		{
+			"path": "../cdms_soudan"
 		}
 	],
 	"settings": {
