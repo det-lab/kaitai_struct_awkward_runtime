@@ -132,13 +132,8 @@ types:
 
     instances:
       timestamp_full:
-        # The firmware reports the timestamp in three 16-bit words.  Despite the
-        # name, the "hi" word is not a high 32-bit component – the hardware
-        # increments it as a plain 16-bit counter alongside the other words.
-        # Historical reference JSON as well as vendor docs expect the composed
-        # value to remain in the lower 32 bits, so we mirror that behaviour and
-        # keep the expression in the same range the reference fixtures use.
-        value: trig_time_lo + (trig_time_mi << 16) + trig_time_hi
+        # Compose the 64-bit timestamp from the firmware's three 16-bit words.
+        value: trig_time_lo + (trig_time_mi << 16) + (trig_time_hi << 32)
 
   pixie_eor:
      seq:
