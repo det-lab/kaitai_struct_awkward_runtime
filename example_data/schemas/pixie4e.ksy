@@ -133,7 +133,7 @@ types:
     instances:
       timestamp_full:
         # Compose the 64-bit timestamp from the firmware's three 16-bit words.
-        value: trig_time_lo + (trig_time_mi << 16) + trig_time_hi * 4294967296
+        value: trig_time_lo + (trig_time_mi << 16) + (trig_time_hi << 32)
 
   pixie_eor:
      seq:
