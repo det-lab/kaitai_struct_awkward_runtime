@@ -42,7 +42,7 @@ Follow the instructions at <https://www.scala-sbt.org/1.x/docs/Installing-sbt-on
 Checkout the repository:
 
 ```bash
-git clone https://github.com/det-lab/kaitai_struct_awkward_runtime
+git clone --recurse-submodules https://github.com/det-lab/kaitai_struct_awkward_runtime
 ```
 
 Create a virtual environment and install the package:
