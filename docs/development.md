@@ -58,8 +58,6 @@ pip install -e .[test]
 
 ```bash
 source .env/bin/activate
-# Clone the custom Kaitai Struct compiler
-git clone https://github.com/det-lab/kaitai_struct_compiler
 make test
 ```
 
