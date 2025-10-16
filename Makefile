@@ -4,6 +4,9 @@
 BUILD = local/bin/awkward-kaitai-build --debug
 JAVA_CLASSES = kaitai_struct_compiler/jvm/target/scala-2.12/classes/io/kaitai/struct
 CLASSPATH_FILE = kaitai_struct_compiler/jvm/target/scala-2.12/classpath.txt
+SBT := sbt --batch --no-colors
+SBT_CMD := cd kaitai_struct_compiler && $(SBT)
+SCALA_SOURCES := $(shell find kaitai_struct_compiler/shared/src/main/scala -name '*.scala')
 
 # This path only works on Linux, need to make it compatible with WSL as well
 # These are the jars that are needed to run the compiler we will be building
@@ -30,12 +33,12 @@ cpp: $(foreach ksy,$(KSY),test_artifacts/$(ksy).cpp)
 
 
 # 1) Build the KSY->C++ compiler kaitai_struct_compiler
-$(JAVA_CLASSES): kaitai_struct_compiler/shared/src/main/scala/io/kaitai/struct/languages/AwkwardCompiler.scala
-	cd kaitai_struct_compiler && sbt package
+$(JAVA_CLASSES): $(SCALA_SOURCES)
+	$(SBT_CMD) package
 
 $(CLASSPATH_FILE): $(JAVA_CLASSES)
 	mkdir -p $(dir $(CLASSPATH_FILE))
-	cd kaitai_struct_compiler && sbt --no-colors --error "export compilerJVM/Compile/fullClasspath" | tail -n 1 > ../$(CLASSPATH_FILE)
+	$(SBT_CMD) --error "export compilerJVM/Compile/fullClasspath" | tail -n 1 > ../$(CLASSPATH_FILE)
 
 # 2) Generate C++ files from the KSY files
 test_artifacts/%.cpp: example_data/schemas/%.ksy $(JAVA_CLASSES) $(CLASSPATH_FILE)
@@ -43,7 +46,7 @@ test_artifacts/%.cpp: example_data/schemas/%.ksy $(JAVA_CLASSES) $(CLASSPATH_FIL
 
 # 3) Build the Python runtime for the C++ shared libraries
 $(BUILD): kaitai_struct_compiler/shared/src/main/scala/io/kaitai/struct/languages/AwkwardCompiler.scala
-	pip install . -t local
+	PYTHONPATH=local:$$PYTHONPATH pip install --upgrade --disable-pip-version-check . -t local
 
 # 4) Compile the generated C++ files into shared libraries
 test_artifacts/lib%.so: test_artifacts/%.cpp $(BUILD)
@@ -57,4 +60,5 @@ list:
 	@LC_ALL=C $(MAKE) -pRrq -f $(firstword $(MAKEFILE_LIST)) : 2>/dev/null | awk -v RS= -F: '/(^|\n)# Files(\n|$$)/,/(^|\n)# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | sort | grep -E -v -e '^[^[:alnum:]]' -e '^$@$$'
 
 clean:
-	rm -rf local build test_artifacts && cd kaitai_struct_compiler && rm -fr js/target/ jvm/target/ project/project/ project/target/ target/ .bsp/
+	rm -rf local build test_artifacts
+	(cd kaitai_struct_compiler && rm -rf js/target/ jvm/target/ project/project/ project/target/ target/ .bsp/)
