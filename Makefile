@@ -3,11 +3,11 @@
 # Remove --debug to strip debugging symbols from the library
 BUILD = local/bin/awkward-kaitai-build --debug
 JAVA_CLASSES = kaitai_struct_compiler/jvm/target/scala-2.12/classes/io/kaitai/struct
+CLASSPATH_FILE = kaitai_struct_compiler/jvm/target/scala-2.12/classpath.txt
 
 # This path only works on Linux, need to make it compatible with WSL as well
 # These are the jars that are needed to run the compiler we will be building
 # They are installed by the kaitai-struct-compiler package
-JAR_PATH = /usr/share/kaitai-struct-compiler/lib/*
 
 KSY := animal fake index_option numpy pixie4e records scdms hello_world scdms_v8 simple_enum
 
@@ -33,9 +33,13 @@ cpp: $(foreach ksy,$(KSY),test_artifacts/$(ksy).cpp)
 $(JAVA_CLASSES): kaitai_struct_compiler/shared/src/main/scala/io/kaitai/struct/languages/AwkwardCompiler.scala
 	cd kaitai_struct_compiler && sbt package
 
+$(CLASSPATH_FILE): $(JAVA_CLASSES)
+	mkdir -p $(dir $(CLASSPATH_FILE))
+	cd kaitai_struct_compiler && sbt --no-colors --error "export compilerJVM/Compile/fullClasspath" | tail -n 1 > ../$(CLASSPATH_FILE)
+
 # 2) Generate C++ files from the KSY files
-test_artifacts/%.cpp: example_data/schemas/%.ksy $(JAVA_CLASSES)
-	java -cp kaitai_struct_compiler/jvm/target/scala-2.12/kaitai-struct-compiler_2.12-0.11-SNAPSHOT.jar:$(JAR_PATH) io.kaitai.struct.JavaMain -t awkward --outdir test_artifacts $<
+test_artifacts/%.cpp: example_data/schemas/%.ksy $(JAVA_CLASSES) $(CLASSPATH_FILE)
+	java -cp "$$(cat $(CLASSPATH_FILE))" io.kaitai.struct.JavaMain -t awkward --outdir test_artifacts $<
 
 # 3) Build the Python runtime for the C++ shared libraries
 $(BUILD): kaitai_struct_compiler/shared/src/main/scala/io/kaitai/struct/languages/AwkwardCompiler.scala
