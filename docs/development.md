@@ -39,30 +39,32 @@ Follow the instructions at <https://www.scala-sbt.org/1.x/docs/Installing-sbt-on
 
 ## Setup the Python environment
 
-Checkout the repository:
-
-```bash
-git clone --recurse-submodules https://github.com/det-lab/kaitai_struct_awkward_runtime
-```
-Then move to the kaitai directory to continue the test.
-
-```bash
-cd kaitai_struct_awkward_runtime
-```
-
-Create a virtual environment and install the package:
+Install the Python venv tooling if needed:
 
 ```bash
 sudo apt install python3-venv
+```
+
+Clone the repository and **change into it before creating the virtual environment** so the `.env/` folder lives in the project root:
+
+```bash
+git clone --recurse-submodules https://github.com/det-lab/kaitai_struct_awkward_runtime
+cd kaitai_struct_awkward_runtime
 python3 -m venv .env
 source .env/bin/activate
 pip install -e .[test]
 ```
 
+Confirm that the virtual environment lives inside the repository:
+
+```bash
+ls .env
+```
+
 ## Run the tests
 
 ```bash
-source ~/.env/bin/activate
+source .env/bin/activate
 make test
 ```
 
@@ -74,7 +76,7 @@ When working on the compiler it is useful to force compilation of a single test 
 this assumes that you are using an IDE which is already taking care of building `local/bin/awkward-kaitai-build`:
 
 ```bash
-source ~/.env/bin/activate
+source .env/bin/activate
 export testcase=simple_enum
 make compile_test
 ```
