@@ -44,6 +44,11 @@ Checkout the repository:
 ```bash
 git clone --recurse-submodules https://github.com/det-lab/kaitai_struct_awkward_runtime
 ```
+Then move to the kaitai directory to continue the test.
+
+```bash
+cd kaitai_struct_awkward_runtime
+```
 
 Create a virtual environment and install the package:
 
@@ -57,7 +62,7 @@ pip install -e .[test]
 ## Run the tests
 
 ```bash
-source .env/bin/activate
+source ~/.env/bin/activate
 make test
 ```
 
@@ -69,7 +74,7 @@ When working on the compiler it is useful to force compilation of a single test 
 this assumes that you are using an IDE which is already taking care of building `local/bin/awkward-kaitai-build`:
 
 ```bash
-source .env/bin/activate
+source ~/.env/bin/activate
 export testcase=simple_enum
 make compile_test
 ```
