@@ -39,19 +39,26 @@ Follow the instructions at <https://www.scala-sbt.org/1.x/docs/Installing-sbt-on
 
 ## Setup the Python environment
 
-Checkout the repository:
-
-```bash
-git clone --recurse-submodules https://github.com/det-lab/kaitai_struct_awkward_runtime
-```
-
-Create a virtual environment and install the package:
+Install the Python venv tooling if needed:
 
 ```bash
 sudo apt install python3-venv
+```
+
+Clone the repository and **change into it before creating the virtual environment** so the `.env/` folder lives in the project root:
+
+```bash
+git clone --recurse-submodules https://github.com/det-lab/kaitai_struct_awkward_runtime
+cd kaitai_struct_awkward_runtime
 python3 -m venv .env
 source .env/bin/activate
 pip install -e .[test]
+```
+
+Confirm that the virtual environment lives inside the repository:
+
+```bash
+ls .env
 ```
 
 ## Run the tests
