@@ -1,5 +1,9 @@
+# Run scala to create the CPP source code
+make test_artifacts/soudan.cpp
+# Compile CPP code to shared library
 export testcase=soudan
 make compile_test
+# Create an executable in CPP that uses the shared library to read a file
 /usr/bin/g++ \
   -fdiagnostics-color=always \
   -g \
@@ -15,5 +19,5 @@ make compile_test
   -I ./build/build/_deps/awkward-headers-src/growable-buffer \
   -I ./build/build/_deps/awkward-headers-src/builder-options \
   -DKS_STR_ENCODING_ICONV
-
+# Execute it
 ./tests/debug_tests
