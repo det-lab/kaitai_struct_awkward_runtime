@@ -2,8 +2,8 @@
 
 # Remove --debug to strip debugging symbols from the library
 BUILD = local/bin/awkward-kaitai-build --debug
-JAVA_CLASSES = kaitai_struct_compiler/jvm/target/scala-2.12/classes/io/kaitai/struct
-CLASSPATH_FILE = kaitai_struct_compiler/jvm/target/scala-2.12/classpath.txt
+JAVA_CLASSES = kaitai_struct_compiler/jvm/target/scala-2.13/classes/io/kaitai/struct
+CLASSPATH_FILE = kaitai_struct_compiler/jvm/target/scala-2.13/classpath.txt
 SBT := sbt --batch --no-colors
 SBT_CMD := cd kaitai_struct_compiler && $(SBT)
 KSC_SOURCES := $(shell find kaitai_struct_compiler -path '*/target' -prune -o -type f '(' -name '*.scala' -o -name '*.sbt' -o -name '*.properties' ')' -print)
