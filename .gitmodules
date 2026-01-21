@@ -1,0 +1,4 @@
+[submodule "kaitai_struct_compiler"]
+	path = kaitai_struct_compiler
+	url = git@github.com:det-lab/kaitai_struct_compiler.git
+	branch = 0.11-awkward
