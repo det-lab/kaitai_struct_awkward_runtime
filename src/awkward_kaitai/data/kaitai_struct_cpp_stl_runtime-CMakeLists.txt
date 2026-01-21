@@ -1,0 +1,43 @@
+cmake_minimum_required (VERSION 3.19)
+project (kaitai_struct_cpp_stl_runtime CXX)
+
+find_package(ZLIB)
+find_package(Iconv)
+
+set (HEADERS
+    kaitai/kaitaistream.h
+    kaitai/kaitaistruct.h
+    kaitai/exceptions.h
+)
+
+set (SOURCES
+    kaitai/kaitaistream.cpp
+)
+
+set(STRING_ENCODING_TYPE "ICONV" CACHE STRING "Set the way strings have to be encoded (ICONV|WIN32API|NONE|...)")
+
+set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
+add_library (${PROJECT_NAME} OBJECT ${SOURCES})
+set_property(TARGET ${PROJECT_NAME} PROPERTY PUBLIC_HEADER ${HEADERS})
+target_include_directories(${PROJECT_NAME} PUBLIC ${PROJECT_SOURCE_DIR})
+set_property(TARGET ${PROJECT_NAME} PROPERTY POSITION_INDEPENDENT_CODE ON)
+
+if (ZLIB_FOUND)
+    target_link_libraries(${PROJECT_NAME} PRIVATE ZLIB::ZLIB)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE -DKS_ZLIB)
+endif()
+
+if(Iconv_FOUND)
+    target_link_libraries(${PROJECT_NAME} PRIVATE Iconv::Iconv)
+endif()
+
+if (STRING_ENCODING_TYPE STREQUAL "ICONV")
+    target_compile_definitions(${PROJECT_NAME} PRIVATE -DKS_STR_ENCODING_ICONV)
+elseif (STRING_ENCODING_TYPE STREQUAL "WIN32API")
+    target_compile_definitions(${PROJECT_NAME} PRIVATE -DKS_STR_ENCODING_WIN32API)
+elseif (STRING_ENCODING_TYPE STREQUAL "NONE")
+    target_compile_definitions(${PROJECT_NAME} PRIVATE -DKS_STR_ENCODING_NONE)
+else()
+    # User action requested
+endif()

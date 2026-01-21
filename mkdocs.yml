@@ -1,0 +1,12 @@
+site_name: Kaitai Struct Awkward Runtime
+site_url: https://det-lab.github.io/kaitai_struct_awkward_runtime/
+repo_url: https://github.com/det-lab/kaitai_struct_awkward_runtime
+edit_uri: edit/main/docs/
+theme:
+  name: material
+  custom_dir: overrides
+  features:
+    - content.action.edit
+plugins:
+  - mkdocs-jupyter:
+      include_source: true
