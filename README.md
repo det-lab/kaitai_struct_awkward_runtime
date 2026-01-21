@@ -32,6 +32,11 @@ print(array)
 
 The documentation is available at <https://det-lab.github.io/kaitai_struct_awkward_runtime/>.
 
+## Requirements
+
+- Kaitai Struct compiler **0.11+** with the `awkward` target.
+- CMake and a C++ toolchain for building shared libraries.
+
 ## Development
 
 - Build and test everything: `make test`
