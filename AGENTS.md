@@ -11,6 +11,7 @@
 ## Setup & Dependencies
 - Initialize submodules first: `git submodule update --init --recursive`.
 - Toolchain: Java + SBT for the compiler, CMake + C++ toolchain for building shared libs, Python 3.8+.
+- Kaitai compiler requirement: `kaitai-struct-compiler` **0.11+** with the `awkward` target.
 
 ## Build, Test, and Development Commands
 - `pip install -e .` installs the package in editable mode.
@@ -39,6 +40,7 @@
 - Run all tests with `pytest` or `nox -s tests`.
 - C++/Kaitai integration tests depend on generated artifacts; use `make test` when touching schemas or compiler pieces.
 - Golden outputs live in `tests/*.json.gz`; update them only when parser output intentionally changes.
+- CI/testing note: auto-loaded pytest plugins are disabled via `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1`.
 
 ## Commit & Pull Request Guidelines
 - Recent history uses Conventional Commits (e.g., `docs: ...`, `chore(deps): ...`), so follow that pattern.
