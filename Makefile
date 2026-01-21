@@ -23,7 +23,7 @@ LIBS := $(foreach ksy,$(KSY),test_artifacts/lib$(ksy).so)
 compile_test: $(BUILD_STAMP) # define testcase environment variable
 	rm -f test_artifacts/lib$(testcase).so
 	PYTHONPATH=$$PYTHONPATH:local $(BUILD) test_artifacts/$(testcase).cpp -b build
-	pytest tests/test_$(testcase).py
+	PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 pytest tests/test_$(testcase).py
 
 cpp: $(foreach ksy,$(KSY),test_artifacts/$(ksy).cpp)
 
@@ -64,7 +64,7 @@ test_artifacts/lib%.so: test_artifacts/%.cpp $(BUILD_STAMP)
 
 # 5) Run all the Python tests
 test: $(LIBS)
-	pytest
+	PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 pytest
 
 list:
 	@LC_ALL=C $(MAKE) -pRrq -f $(firstword $(MAKEFILE_LIST)) : 2>/dev/null | awk -v RS= -F: '/(^|\n)# Files(\n|$$)/,/(^|\n)# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | sort | grep -E -v -e '^[^[:alnum:]]' -e '^$@$$'

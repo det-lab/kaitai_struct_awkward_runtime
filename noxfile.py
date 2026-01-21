@@ -37,4 +37,5 @@ def tests(session: nox.Session) -> None:
     Run the unit and regular tests.
     """
     session.install(".[test]")
+    session.env["PYTEST_DISABLE_PLUGIN_AUTOLOAD"] = "1"
     session.run("pytest", *session.posargs)
