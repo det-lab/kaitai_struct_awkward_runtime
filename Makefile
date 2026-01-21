@@ -1,4 +1,4 @@
-.PHONY: list test all clean
+.PHONY: list test all clean cpp compile_test regen_cpp
 
 # Remove --debug to strip debugging symbols from the library
 BUILD = local/bin/awkward-kaitai-build --debug
@@ -6,7 +6,11 @@ JAVA_CLASSES = kaitai_struct_compiler/jvm/target/scala-2.12/classes/io/kaitai/st
 CLASSPATH_FILE = kaitai_struct_compiler/jvm/target/scala-2.12/classpath.txt
 SBT := sbt --batch --no-colors
 SBT_CMD := cd kaitai_struct_compiler && $(SBT)
-SCALA_SOURCES := $(shell find kaitai_struct_compiler/shared/src/main/scala -name '*.scala')
+KSC_SOURCES := $(shell find kaitai_struct_compiler -path '*/target' -prune -o -type f \\( -name '*.scala' -o -name '*.sbt' -o -name '*.properties' \\) -print)
+PY_SRCS := $(shell find src -type f \( -name '*.py' -o -name 'py.typed' \))
+DATA_SRCS := $(shell find src/awkward_kaitai/data -type f)
+BUILD_STAMP := local/.awkward_kaitai_installed
+KSC_STAMP := kaitai_struct_compiler/.sbt_package_stamp
 
 # This path only works on Linux, need to make it compatible with WSL as well
 # These are the jars that are needed to run the compiler we will be building
@@ -16,12 +20,14 @@ KSY := animal fake index_option numpy pixie4e records scdms hello_world scdms_v8
 
 LIBS := $(foreach ksy,$(KSY),test_artifacts/lib$(ksy).so)
 
-compile_test: # define testcase environment variable
+compile_test: $(BUILD_STAMP) # define testcase environment variable
 	rm -f test_artifacts/lib$(testcase).so
 	PYTHONPATH=$$PYTHONPATH:local $(BUILD) test_artifacts/$(testcase).cpp -b build
 	pytest tests/test_$(testcase).py
 
 cpp: $(foreach ksy,$(KSY),test_artifacts/$(ksy).cpp)
+
+regen_cpp: cpp
 
 # not used currently, here for later reference
 #inject_layoutbuilder:
@@ -33,8 +39,11 @@ cpp: $(foreach ksy,$(KSY),test_artifacts/$(ksy).cpp)
 
 
 # 1) Build the KSY->C++ compiler kaitai_struct_compiler
-$(JAVA_CLASSES): $(SCALA_SOURCES)
+$(KSC_STAMP): $(KSC_SOURCES)
 	$(SBT_CMD) package
+	touch $@
+
+$(JAVA_CLASSES): $(KSC_STAMP)
 
 $(CLASSPATH_FILE): $(JAVA_CLASSES)
 	mkdir -p $(dir $(CLASSPATH_FILE))
@@ -45,11 +54,12 @@ test_artifacts/%.cpp: example_data/schemas/%.ksy $(JAVA_CLASSES) $(CLASSPATH_FIL
 	java -cp "$$(cat $(CLASSPATH_FILE))" io.kaitai.struct.JavaMain -t awkward --outdir test_artifacts $<
 
 # 3) Build the Python runtime for the C++ shared libraries
-$(BUILD): kaitai_struct_compiler/shared/src/main/scala/io/kaitai/struct/languages/AwkwardCompiler.scala
+$(BUILD_STAMP): pyproject.toml $(PY_SRCS) $(DATA_SRCS)
 	PYTHONPATH=local:$$PYTHONPATH pip install --upgrade --disable-pip-version-check . -t local
+	touch $@
 
 # 4) Compile the generated C++ files into shared libraries
-test_artifacts/lib%.so: test_artifacts/%.cpp $(BUILD)
+test_artifacts/lib%.so: test_artifacts/%.cpp $(BUILD_STAMP)
 	PYTHONPATH=$$PYTHONPATH:local $(BUILD) $< -b build
 
 # 5) Run all the Python tests
