@@ -39,6 +39,7 @@
 - Recent history uses Conventional Commits (e.g., `docs: ...`, `chore(deps): ...`), so follow that pattern.
 - Keep commits focused and descriptive; mention schema or compiler changes explicitly.
 - PRs should include a short summary, testing notes (commands run), and linked issues when applicable.
+- Remotes: only use `det-lab` repositories for pushes and PRs; never push to `kaitai-io`.
 
 ## Configuration & Tooling Notes
 - Pre-commit config: `.pre-commit-config.yaml` (run via `nox -s lint`).
