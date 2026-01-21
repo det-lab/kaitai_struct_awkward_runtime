@@ -5,8 +5,12 @@
 - `tests/`: Pytest suite (`test_*.py`) plus JSON fixtures.
 - `example_data/schemas/`: Kaitai `.ksy` schemas used to generate C++ sources.
 - `test_artifacts/`: Generated `.cpp` files and compiled `.so` libraries (build outputs).
-- `kaitai_struct_compiler/`: Kaitai Struct compiler sources (Scala/SBT build).
+- `kaitai_struct_compiler/`: Kaitai Struct compiler submodule (Scala/SBT build).
 - `docs/`, `mkdocs.yml`: Documentation site content and configuration.
+
+## Setup & Dependencies
+- Initialize submodules first: `git submodule update --init --recursive`.
+- Toolchain: Java + SBT for the compiler, CMake + C++ toolchain for building shared libs, Python 3.8+.
 
 ## Build, Test, and Development Commands
 - `pip install -e .` installs the package in editable mode.
@@ -34,6 +38,7 @@
 - Framework: pytest with strict config (`pyproject.toml`), tests live under `tests/`.
 - Run all tests with `pytest` or `nox -s tests`.
 - C++/Kaitai integration tests depend on generated artifacts; use `make test` when touching schemas or compiler pieces.
+- Golden outputs live in `tests/*.json.gz`; update them only when parser output intentionally changes.
 
 ## Commit & Pull Request Guidelines
 - Recent history uses Conventional Commits (e.g., `docs: ...`, `chore(deps): ...`), so follow that pattern.
