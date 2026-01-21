@@ -8,6 +8,9 @@ on:
     branches: [ "main" ]
   pull_request:
 
+permissions:
+  contents: write
+
 jobs:
   build:
 
@@ -18,9 +21,20 @@ jobs:
         python-version: ["3.10", "3.11", "3.12"]
 
     steps:
+    - uses: actions/checkout@v5
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v6
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Set up Java
+      uses: actions/setup-java@v5
+      with:
+        distribution: temurin
+        java-version: "17"
     - name: Install kaitai-struct-compiler
       run: |
         curl -LO https://github.com/kaitai-io/kaitai_struct_compiler/releases/download/0.11/kaitai-struct-compiler_0.11_all.deb
+        sudo apt-get update
         sudo apt-get install -y ./kaitai-struct-compiler_0.11_all.deb
     - name: Install sbt
       run: |
@@ -30,11 +44,6 @@ jobs:
         curl -fsSL https://repo.scala-sbt.org/scalasbt/debian/gpg | sudo gpg --batch --yes --dearmor -o /usr/share/keyrings/sbt.gpg
         sudo apt-get update
         sudo apt-get install -y sbt
-    - uses: actions/checkout@v6
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v6
-      with:
-        python-version: ${{ matrix.python-version }}
     - name: Submodule update
       run: |
         git submodule update --init
