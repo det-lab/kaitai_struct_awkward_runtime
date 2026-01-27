@@ -1,0 +1,875 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://det-lab.github.io/kaitai_struct_awkward_runtime/reimplementation-plan-0.11/">
+      
+      
+        <link rel="prev" href="../development/">
+      
+      
+        <link rel="next" href="../release/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>0.11 Awkward Target Reimplementation Plan - Kaitai Struct Awkward Runtime</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#011-awkward-target-reimplementation-plan" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Kaitai Struct Awkward Runtime" class="md-header__button md-logo" aria-label="Kaitai Struct Awkward Runtime" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Kaitai Struct Awkward Runtime
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              0.11 Awkward Target Reimplementation Plan
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/det-lab/kaitai_struct_awkward_runtime" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Kaitai Struct Awkward Runtime" class="md-nav__button md-logo" aria-label="Kaitai Struct Awkward Runtime" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Kaitai Struct Awkward Runtime
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/det-lab/kaitai_struct_awkward_runtime" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Katai struct awkward runtime
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../debug/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Debugging and Developing Awkward-Kaitai
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Setup a local development environment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0.11 Awkward Target Reimplementation Plan
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    0.11 Awkward Target Reimplementation Plan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#summary-of-choices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary of choices
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-0-bootstrap-the-dev-branch-repo-structure-12-days" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 0 — Bootstrap the dev branch repo structure (1–2 days)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-1-ksc-011-analysis-delta-mapping-12-days" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1 — KSC 0.11 analysis &amp; delta mapping (1–2 days)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-2-reimplement-awkward-target-in-ksc-011-510-days" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — Reimplement Awkward target in KSC 0.11 (5–10 days)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 2 — Reimplement Awkward target in KSC 0.11 (5–10 days)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-c-codegen-scaffolding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 C++ codegen scaffolding
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-type-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Type mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-layout-builder-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Layout builder generation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-value-instances-expressions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Value instances &amp; expressions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-3-runtime-interface-alignment-23-days" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3 — Runtime interface alignment (2–3 days)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-4-test-golden-updates-24-days" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 4 — Test &amp; golden updates (2–4 days)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-5-stabilization-docs-12-days" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 5 — Stabilization &amp; docs (1–2 days)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deliverables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deliverables
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#risks-mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risks &amp; Mitigations
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../release/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to release the packages
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#summary-of-choices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary of choices
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-0-bootstrap-the-dev-branch-repo-structure-12-days" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 0 — Bootstrap the dev branch repo structure (1–2 days)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-1-ksc-011-analysis-delta-mapping-12-days" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1 — KSC 0.11 analysis &amp; delta mapping (1–2 days)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-2-reimplement-awkward-target-in-ksc-011-510-days" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2 — Reimplement Awkward target in KSC 0.11 (5–10 days)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Phase 2 — Reimplement Awkward target in KSC 0.11 (5–10 days)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-c-codegen-scaffolding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 C++ codegen scaffolding
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-type-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Type mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-layout-builder-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Layout builder generation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-value-instances-expressions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Value instances &amp; expressions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-3-runtime-interface-alignment-23-days" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3 — Runtime interface alignment (2–3 days)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-4-test-golden-updates-24-days" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 4 — Test &amp; golden updates (2–4 days)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-5-stabilization-docs-12-days" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 5 — Stabilization &amp; docs (1–2 days)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deliverables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deliverables
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#risks-mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Risks &amp; Mitigations
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+
+
+
+                  
+
+
+  
+    <a href="https://github.com/det-lab/kaitai_struct_awkward_runtime/edit/main/docs/reimplementation-plan-0.11.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="011-awkward-target-reimplementation-plan">0.11 Awkward Target Reimplementation Plan</h1>
+<h2 id="summary-of-choices">Summary of choices</h2>
+<ul>
+<li><strong>Branch strategy:</strong> Use the orphan <code>dev</code> branch for the reimplementation. This keeps the 0.11 rewrite clean and lets us rebuild the repo structure intentionally.</li>
+<li><strong>Compiler source:</strong> Implement the new Awkward target <strong>inside <code>det-lab/kaitai_struct_compiler</code></strong> (Scala-based, following the style of other language targets).</li>
+<li><strong>Testing scope:</strong> Run all existing tests from <code>main</code> (ported into the new repo) and add targeted tests where 0.11 changes behavior or types.</li>
+<li><strong>Golden data updates:</strong> Allowed. Any changes will be documented in a dedicated Markdown changelog.</li>
+<li><strong>CI/testing environment:</strong> Align to <strong>Python 3.11</strong> and disable auto-loaded pytest plugins in test runs to avoid pulling in NumPy-2-incompatible binary deps. This repo does not use those plugins, but pytest discovers them automatically via installed packages.</li>
+<li><strong>Plugins observed:</strong> <code>pytest-astropy</code> / <code>pytest-astropy-header</code> (imports <code>astropy</code>), which pulls in <code>erfa</code> and other compiled extensions.</li>
+<li><strong>Why they auto-load:</strong> pytest loads entry points from installed packages by default, even if tests do not import them.</li>
+<li><strong>Why they are unnecessary here:</strong> tests only use core pytest features and the repo's own fixtures; no astropy-specific markers or utilities are referenced.</li>
+</ul>
+<hr />
+<h2 id="phase-0-bootstrap-the-dev-branch-repo-structure-12-days">Phase 0 — Bootstrap the <code>dev</code> branch repo structure (1–2 days)</h2>
+<p>Goal: recreate the runtime repo skeleton on <code>dev</code> but pointing to the 0.11 compiler.</p>
+<p>1) <strong>Bring back repo structure</strong>
+   - Restore directories: <code>src/awkward_kaitai</code>, <code>tests</code>, <code>example_data</code>, <code>docs</code>, <code>pyproject.toml</code>, <code>Makefile</code>, <code>AGENTS.md</code>, <code>README.md</code>.
+   - Ensure <code>kaitai_struct_compiler</code> submodule points to <strong>det-lab/kaitai_struct_compiler@0.11-awkward</strong>.
+2) <strong>Initialize tooling</strong>
+   - Recreate <code>noxfile.py</code>, <code>.pre-commit-config.yaml</code>, <code>pyproject.toml</code> with current constraints.
+   - Update <code>Makefile</code> to match the new compiler flow (0.11 compiler build hooks).
+3) <strong>Target baseline</strong>
+   - Confirm repo structure is functionally identical to <code>main</code> aside from compiler target changes.</p>
+<hr />
+<h2 id="phase-1-ksc-011-analysis-delta-mapping-12-days">Phase 1 — KSC 0.11 analysis &amp; delta mapping (1–2 days)</h2>
+<p>Goal: identify all breaks vs 0.10, define exact adaptation work.</p>
+<p>1) <strong>API and pipeline diff</strong>
+   - Compare 0.10 vs 0.11 for:
+     - <code>LanguageCompiler</code> hooks (<code>instance*</code>, <code>attr*</code>, array handling, type mapping).
+     - Translator behavior (value instances, casts, shifts, numeric ops).
+     - Runtime output expectations (C++ signatures, layouts).
+2) <strong>Generate a “porting checklist”</strong>
+   - Map existing Awkward implementation pieces to 0.11 equivalents.
+   - Note any new 0.11 idioms used by other language targets.</p>
+<hr />
+<h2 id="phase-2-reimplement-awkward-target-in-ksc-011-510-days">Phase 2 — Reimplement Awkward target in KSC 0.11 (5–10 days)</h2>
+<p>Goal: port the compiler target cleanly.</p>
+<h3 id="21-c-codegen-scaffolding">2.1 C++ codegen scaffolding</h3>
+<ul>
+<li>Rebuild <code>AwkwardCompiler.scala</code> in 0.11 style.</li>
+<li>Ensure <code>instance</code> and <code>seq</code> field generation aligns with 0.11 base classes.</li>
+</ul>
+<h3 id="22-type-mapping">2.2 Type mapping</h3>
+<ul>
+<li>Re-implement <code>kaitaiType2NativeType</code> mapping with 0.11 logic.</li>
+<li>Ensure correct handling of:</li>
+<li><code>CalcIntType</code> and integer shifts.</li>
+<li>arrays (repeat <code>expr</code>/<code>until</code>/<code>eos</code>).</li>
+<li>enums and unions.</li>
+</ul>
+<h3 id="23-layout-builder-generation">2.3 Layout builder generation</h3>
+<ul>
+<li>Re-create Awkward layout builder structures from 0.11’s AST flow:</li>
+<li><code>RecordBuilder</code>, <code>ListOffsetBuilder</code>, <code>NumpyBuilder</code>.</li>
+<li>Ensure builder naming and structure remain stable across schema changes.</li>
+</ul>
+<h3 id="24-value-instances-expressions">2.4 Value instances &amp; expressions</h3>
+<ul>
+<li>Align with 0.11 expression pipeline:</li>
+<li>Implement safe shifts for 32+ bit ops.</li>
+<li>Avoid UB in all integer math.</li>
+</ul>
+<hr />
+<h2 id="phase-3-runtime-interface-alignment-23-days">Phase 3 — Runtime interface alignment (2–3 days)</h2>
+<p>Goal: keep Python runtime working with new C++ output.</p>
+<p>1) <strong>Reader integration</strong>
+   - Confirm symbols expected by <code>Reader</code> (<code>fill</code>, <code>form</code>, <code>length</code>, etc.) still match.
+   - If KSC 0.11 changes anything, add adapter or update runtime.</p>
+<p>2) <strong>CMake / build system</strong>
+   - Make sure builder CLI still works (<code>awkward-kaitai-build</code>).
+   - Update <code>src/awkward_kaitai/data/CMakeLists.txt</code> if new compiler output requires it.</p>
+<hr />
+<h2 id="phase-4-test-golden-updates-24-days">Phase 4 — Test &amp; golden updates (2–4 days)</h2>
+<p>Goal: ensure all tests pass against new output.</p>
+<p>1) <strong>Regenerate all schemas</strong>
+   - Rebuild <code>test_artifacts/*.cpp</code> and <code>.so</code> with 0.11.
+2) <strong>Run full test suite</strong>
+   - <code>make test</code>
+3) <strong>Golden changes</strong>
+   - Update <code>tests/*.json.gz</code> if output changes.
+   - Document all changes in a new file: <code>docs/golden-output-changes.md</code>.</p>
+<hr />
+<h2 id="phase-5-stabilization-docs-12-days">Phase 5 — Stabilization &amp; docs (1–2 days)</h2>
+<p>Goal: produce a clean implementation ready for merge.</p>
+<p>1) <strong>Performance sanity checks</strong>
+   - Validate build times and memory usage.
+2) <strong>Documentation</strong>
+   - Update <code>README.md</code> and <code>AGENTS.md</code> with 0.11 notes.
+   - Add “0.11 migration notes” section.
+3) <strong>CI readiness</strong>
+   - Disable pytest auto-plugin loading in CI (e.g., <code>PYTEST_DISABLE_PLUGIN_AUTOLOAD=1</code>) and explicitly enable any required plugins.</p>
+<hr />
+<h2 id="deliverables">Deliverables</h2>
+<ul>
+<li>Fully reimplemented Awkward target in <code>det-lab/kaitai_struct_compiler</code> 0.11 branch.</li>
+<li>Runtime repo (dev) with working tests.</li>
+<li><code>docs/golden-output-changes.md</code> detailing all JSON output changes.</li>
+<li>Updated Makefile/tooling/CI.</li>
+</ul>
+<hr />
+<h2 id="risks-mitigations">Risks &amp; Mitigations</h2>
+<ul>
+<li><strong>KSC 0.11 API changes:</strong> mitigate with a direct diff &amp; cross-reference to other language targets.</li>
+<li><strong>Output drift in JSON:</strong> document changes and validate schema semantics.</li>
+<li><strong>Builder incompatibilities:</strong> verify buffer/format contract using <code>Reader</code>.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.action.edit"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
