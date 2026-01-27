@@ -1,0 +1,10 @@
+{
+    // Prevents CMake from automatically configuring the project when opening the folder
+    "cmake.configureOnOpen": false,
+
+    // Disables showing inferred types in the Metals (Scala language server) UI
+    "metals.showInferredType": false,
+
+    // Specifies a custom sbt script for Metals; null means to use the default
+    "metals.sbtScript": null
+}
