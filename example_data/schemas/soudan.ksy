@@ -17,7 +17,7 @@ seq:
     
   # Very computationally expensive  
   - id: logical_rcrds
-    type: logical_records
+    type: logical_record
     repeat: eos
 
 types:
@@ -58,30 +58,23 @@ types:
         type: charge_config_header
         if: header_num == 0x10002
   
-  logical_records:
+  logical_record:
     seq:
-      - id: event_hdr
-        type: event_header
-        
-      - id: admin_rcrd
-        type: administrative_record
-        
-      - id: trigger_rcrd
-        type: trigger_record_format
-      
-      - id: tlb_trig_mask_rcrd
-        type: tlb_trigger_mask_record
-      
-      - id: gps_data
-        type: gps_data
-        
-      - id: trace_rcrd
-        type: trace_data
-        repeat: expr
-        repeat-expr: _root.detector_hdr.repeat_value
-        
-      - id: soudan_buffer
-        type: soudan_history_buffer
+      - id: header
+        type: u4
+      - id: section
+        type:
+          switch-on: '((header >> 16) == 0xA980) ? 0xA980 : header'
+          cases:
+            0xA980: event_header
+            0x00000002: administrative_record
+            0x00000011: trace_data
+            0x00000021: soudan_history_buffer
+            0x00000060: gps_data
+            0x00000080: trigger_record_format
+            0x00000081: tlb_trigger_mask_record
+            0x00000022: detector_trigger_rates
+            0x00000031: veto_trigger_rates
         
   format_word:
     seq:
@@ -144,26 +137,23 @@ types:
         
   event_header:
     seq:
-      - id: event_header_word
-        type: u4
-      
       - id: event_size
         type: u4
         
     instances:
       event_identifier:
-        value: (event_header_word >> 16) & 0xFFFF
+        value: (_parent.header >> 16) & 0xFFFF
         
     
       event_class:
-        value: (event_header_word >> 8) & 0xF
+        value: (_parent.header >> 8) & 0xF
         doc: |
           0x0: Raw
           0x1: Processed
           0x2: Monte Carlo
         
       event_category:
-        value: (event_header_word >> 12) & 0xF
+        value: (_parent.header >> 12) & 0xF
         doc: |
           0x0: Per Trigger
           0x1: Occasional
@@ -174,7 +164,7 @@ types:
           0x6: Per Trigger w/ Selective Readout of Detectors that Cross Threshold
       
       event_type:
-        value: (event_header_word & 0xFF)
+        value: (_parent.header & 0xFF)
         doc: |
           0x0: Wimp Search
           0x1: 60Co Calibration
@@ -190,11 +180,6 @@ types:
         
   administrative_record:
     seq:
-      - id: header_num
-        type: u4
-        doc: |
-          0x0000 0002: Admin, Long Series Num
-                       (Event Num, Timestamp, Livetime, ...)
       - id: admin_len
         type: u4
         doc: |
@@ -226,10 +211,6 @@ types:
         
   trace_record:
     seq:
-      - id: header_num
-        type: u4
-        doc: |
-          0x0000 0011
       - id: trace_len
         type: u4
       - id: trace_bookkeeping_header
@@ -290,10 +271,6 @@ types:
         
   soudan_history_buffer:
     seq:
-      - id: history_buffer_header
-        type: u4
-        doc: |
-          0x0000 0021
       - id: history_buffer_len
         type: u4
       - id: num_time_nvt
@@ -323,8 +300,6 @@ types:
         
   trigger_record_format:
     seq:
-      - id: trigger_header
-        type: u4
       - id: trigger_len
         type: u4
       - id: trigger_time
@@ -336,8 +311,6 @@ types:
         
   tlb_trigger_mask_record:
     seq:
-      - id: tlb_mask_header
-        type: u4
       - id: tlb_len
         type: u4
       - id: tower_mask
@@ -347,87 +320,53 @@ types:
         
   gps_data:
     seq:
-      - id: tlb_mask_header
-        type: u4
       - id: len
         type: u4
       - id: gps_year_day
-        size: len_value
+        type: u4
+        if: len > 0
       - id: gps_status_hour_minute_second
-        size: len_value
+        type: u4
+        if: len > 0
       - id: gps_microsecs_from_gps_second
-        size: len_value
+        type: u4
+        if: len > 0
         
-    instances:
-      len_value:
-        value: '(len > 0) ? 4 : 0'
+  detector_trigger_rates:
+    seq:
+      - id: len_to_next_header
+        type: u4
+      - id: clocking_interval
+        type: u4
+      - id: tower_num
+        type: u4
+      - id: detector_codes
+        type: u4
+        repeat: expr
+        repeat-expr: 6
+      - id: j_codes
+        type: u4
+        repeat: expr
+        repeat-expr: 5
+      - id: counter_values
+        type: u4
+        repeat: expr
+        repeat-expr: 30
         
-  #detector_trigger_threshold_data:
-  #  seq:
-  #    - id: threshold_header
-  #      type: u4
-  #    - id: len_to_next_header
-  #      type: u4
-  #    - id: minimum_voltage_level
-  #      type: u4
-  #    - id: maximum_voltage_level
-  #      type: u4
-  #    - id: dynamic_range
-  #      type: u4
-  #    - id: tower_num
-  #      type: u4
-  #    - id: detector_codes
-  #      type: u4
-  #      repeat: expr
-  #      repeat-expr: 6
-  #    - id: operations_codes
-  #      type: u4
-  #      repeat: expr
-  #      repeat-expr: 9
-  #    - id: adc_values
-  #      type: u4
-  #      repeat: expr
-  #      repeat-expr: 54
-        
-  #detector_trigger_rates:
-  #  seq:
-  #    - id: detector_trigger_header
-  #      type: u4
-  #    - id: len_to_next_header
-  #      type: u4
-  #    - id: clocking_interval
-  #      type: u4
-  #    - id: tower_num
-  #      type: u4
-  #    - id: detector_codes
-  #      type: u4
-  #      repeat: expr
-  #      repeat-expr: 6
-  #    - id: j_codes
-  #      type: u4
-  #      repeat: expr
-  #      repeat-expr: 5
-  #    - id: counter_values
-  #      type: u4
-  #      repeat: expr
-  #      repeat-expr: 30
-        
-  #veto_trigger_rates:
-  #  seq:
-  #    - id: veto_trigger_header
-  #      type: u4
-  #    - id: len_to_next_header
-  #      type: u4
-  #    - id: clocking_interval
-  #      type: u4
-  #    - id: num_entries
-  #      type: u4
-  #    - id: detector_code
-  #      type: u4
-  #      repeat: expr
-  #      repeat-expr: num_entries
-  #    - id: counter_value_det_code
-  #      type: u4
-  #      repeat: expr
-  #      repeat-expr: num_entries
+  veto_trigger_rates:
+    seq:
+      - id: len_to_next_header
+        type: u4
+      - id: clocking_interval
+        type: u4
+      - id: num_entries
+        type: u4
+      - id: detector_code
+        type: u4
+        repeat: expr
+        repeat-expr: num_entries
+      - id: counter_value_det_code
+        type: u4
+        repeat: expr
+        repeat-expr: num_entries
         
