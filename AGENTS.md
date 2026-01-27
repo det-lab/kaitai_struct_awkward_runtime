@@ -42,6 +42,13 @@
 - Golden outputs live in `tests/*.json.gz`; update them only when parser output intentionally changes.
 - CI/testing note: auto-loaded pytest plugins are disabled via `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1`.
 
+## Release Instructions
+- Ensure a clean repo and initialized submodules: `git submodule update --init --recursive`.
+- Tag and push: `git tag -a 0.x.y -m "Release 0.x.y"` then `git push origin main 0.x.y`.
+- Create a GitHub release with notes for the tag.
+- Build and publish to PyPI with Hatch: `hatch build` then `hatch publish`.
+- PyPI auth: use `~/.pypirc` with `[pypi]` and a token, or set `HATCH_INDEX_USER=__token__` and `HATCH_INDEX_AUTH=<token>`.
+
 ## Commit & Pull Request Guidelines
 - Recent history uses Conventional Commits (e.g., `docs: ...`, `chore(deps): ...`), so follow that pattern.
 - Keep commits focused and descriptive; mention schema or compiler changes explicitly.
