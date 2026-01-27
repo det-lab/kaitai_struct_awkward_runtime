@@ -37,10 +37,12 @@ awkward-kaitai-build = "awkward_kaitai.builder:main"
 
 [project.optional-dependencies]
 test = [
+  "construct",
   "pytest >=6",
   "pytest-cov >=3",
 ]
 dev = [
+  "construct",
   "pytest >=6",
   "pytest-cov >=3",
 ]
