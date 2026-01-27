@@ -7,8 +7,7 @@ import pytest
 
 from awkward_kaitai import Reader
 
-spec_mod = pytest.importorskip("cdms_soudan.scdms_soudan_spec")
-complete_test_file = spec_mod.complete_test_file
+from tests.data.scdms_soudan_spec import complete_test_file
 
 
 def _as_int(value):
