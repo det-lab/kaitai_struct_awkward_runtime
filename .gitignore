@@ -160,3 +160,4 @@ test_artifacts
 local
 interactive_test*
 tests/debug_tests
+cdms_soudan/
