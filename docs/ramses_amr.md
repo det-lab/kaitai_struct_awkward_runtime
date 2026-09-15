@@ -38,6 +38,11 @@ java -cp "$(cat <classpath>)" io.kaitai.struct.JavaMain -t awkward \
 
 ## Data
 
-The RAMSES sample data (`amr_00088.out00001`, ~4.3 MB) is not committed; it is
+`example_data/data/amr_00088_truncated_50kb.dat` is a committed, small copy of
+`amr_00088.out00001` (the first ~50 KB): full header + levels 0-3 data, with
+`numbl` rows 4-7 zeroed so the upper levels parse as empty. It is used by
+`tests/test_ramses_amr.py` so the test runs without downloading data.
+
+The full data file (`amr_00088.out00001`, ~4.3 MB) is not committed; it is
 downloaded at test time from the yt data site. Dataset:
 `ramses_rt_00088` (`https://yt-project.org/data/ramses_rt_00088.tar.gz`).
