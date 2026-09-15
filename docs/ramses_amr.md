@@ -46,3 +46,26 @@ java -cp "$(cat <classpath>)" io.kaitai.struct.JavaMain -t awkward \
 The full data file (`amr_00088.out00001`, ~4.3 MB) is not committed; it is
 downloaded at test time from the yt data site. Dataset:
 `ramses_rt_00088` (`https://yt-project.org/data/ramses_rt_00088.tar.gz`).
+
+## Performance (Python backend vs Awkward backend)
+
+Parsing real RAMSES AMR files (each measurement in a fresh process, `peak_rss`
+from `resource.ru_maxrss`). Both produce an equivalent structure. Full detail
+in the PR comment on `det-lab/kaitai_struct_awkward_runtime` #70.
+
+| File(s) | Python time | Awkward time | Python RSS | Awkward RSS |
+|---|---|---|---|---|
+| `amr_00088.out00001` (4.3 MB) | ~197 ms | ~567 ms | ~47 MB | ~66.5 MB |
+| `amr_00088.out00004` (4.4 MB) | ~456 ms | ~680 ms | ~48 MB | ~67 MB |
+| all 16 AMR files (69.6 MB) | ~4,329 ms | ~9,956 ms | ~627 MB | ~257 MB |
+
+- Single-file: the Awkward backend is ~2.9x slower and ~1.4x higher RSS. The
+  extra cost is in the C++ `fill` (~543 ms; `ak.from_buffers` is only ~11 ms)
+  building the typed nested layout (per-element options/unions/list boundaries).
+- Whole set: the Awkward backend is ~2.3x slower but ~2.4x **lower** RSS
+  (257 MB vs 627 MB) because an `ak.Array` stores compact typed buffers, whereas
+  the Python backend builds a Python object graph.
+- The dataset also has much larger per-CPU files (not yet covered by a schema):
+  `rt_00088.outNNNNN` ~35-37 MB each and `hydro_00088.outNNNNN` ~18.5 MB each.
+  These need `ramses_rt`/`ramses_hydro` schemas and would be the most
+  interesting stress test.
