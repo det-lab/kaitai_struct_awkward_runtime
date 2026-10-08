@@ -4,6 +4,12 @@ import awkward as ak
 import awkward_kaitai
 
 
+def _numbl(h, level, cpu):
+    # numbl is a fortran_2d_vector; rows are records wrapping the values list.
+    rows = ak.to_list(h.ramses_headerA__Znumbl.fortran_2d_vectorA__Zvector)
+    return rows[level]["vector_valuesA__Zvalues"][cpu]
+
+
 def test_ramses_amr_truncated():
     # amr_00088_truncated_50kb.dat is the first ~50 KB of amr_00088.out00001
     # (CPU 1 of the ramses_rt_00088 dataset): full header + levels 0-3 data,
@@ -27,13 +33,34 @@ def test_ramses_amr_truncated():
     assert scalar("ngrid_current") == 27740
     assert scalar("boxlen") == 6.0
 
-    # 8 levels; level 0 has one populated cpu (numbl[0][11]==1), upper levels empty
+    # numbl grid is [nlevelmax, ncpu+nboundary] = [8, 16]
+    rows = ak.to_list(h.ramses_headerA__Znumbl.fortran_2d_vectorA__Zvector)
+    assert len(rows) == 8
+    assert all(len(r["vector_valuesA__Zvalues"]) == 16 for r in rows)
+
+    # a few exact numbl values (upper levels are zeroed in this truncated copy)
+    assert _numbl(h, 0, 11) == 1
+    assert _numbl(h, 3, 7) == 14
+    assert all(_numbl(h, lv, cpu) == 0 for lv in range(4, 8) for cpu in range(16))
+
+    # 8 levels; the populated-cpu set must match numbl>0 exactly, and each
+    # populated cpu must carry pos_x/pos_y/pos_z vectors of length == numbl.
     li = arr.ramses_amrA__Zamr_info.ramses_amr_infoA__Zlevel_infos
     assert ak.num(li, axis=0) == 8
 
-    ci0 = li[0].ramses_amr_level_infoA__Zcpu_info
-    assert ak.num(ci0, axis=0) == 16
-    assert int(ak.sum(ak.is_none(ci0))) == 15  # 15 of 16 cpus are empty at level 0
+    for lv in range(8):
+        ci = li[lv].ramses_amr_level_infoA__Zcpu_info
+        assert ak.num(ci, axis=0) == 16
+        present = [i for i, p in enumerate(ak.to_list(ak.is_none(ci))) if not p]
+        expected = [c for c in range(16) if _numbl(h, lv, c) > 0]
+        assert present == expected, f"level {lv}: populated cpus {present} != numbl>0 {expected}"
 
-    ci4 = li[4].ramses_amr_level_infoA__Zcpu_info
-    assert int(ak.sum(ak.is_none(ci4))) == 16  # truncated levels are entirely empty
+        for cpu in present:
+            rec = ci[cpu]
+            n = _numbl(h, lv, cpu)
+            for v in ("pos_x", "pos_y", "pos_z"):
+                vals = ak.to_list(
+                    getattr(rec, "ramses_level_cpu_infoA__Z" + v)
+                    .fortran_vectorA__Zvector.vector_valuesA__Zvalues
+                )
+                assert len(vals) == n, f"level {lv} cpu {cpu} {v} len {len(vals)} != {n}"
