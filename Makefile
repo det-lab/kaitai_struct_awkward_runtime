@@ -16,7 +16,7 @@ KSC_STAMP := kaitai_struct_compiler/.sbt_package_stamp
 # These are the jars that are needed to run the compiler we will be building
 # They are installed by the kaitai-struct-compiler package
 
-KSY := animal fake index_option numpy pixie4e records scdms hello_world scdms_v8 simple_enum
+KSY := animal fake index_option numpy pixie4e records scdms hello_world scdms_v8 simple_enum switch_amr_like ramses_amr ramses_rt
 
 LIBS := $(foreach ksy,$(KSY),test_artifacts/lib$(ksy).so)
 
