@@ -34,12 +34,14 @@ The documentation is available at <https://det-lab.github.io/kaitai_struct_awkwa
 
 ### Example schemas
 
-`example_data/schemas/ramses_amr.ksy` is a real-world example (RAMSES AMR
-output) that exercises several Awkward-target features: switches whose case is
-an empty type (handled as a per-element `None` option), switches over primitive
-types, and `_raw_` byte-buffer reads. With the current `kaitai_struct_compiler`
-fork it generates, builds, and reads correctly. See `docs/ramses_amr.md` for the
-verified output and the codegen fixes it requires.
+`example_data/schemas/ramses_amr.ksy` and `example_data/schemas/ramses_rt.ksy`
+are real-world examples (RAMSES AMR and radiative-transfer output) that exercise
+several Awkward-target features: switches whose case is an empty type (handled
+as a per-element `None` option), switches over primitive types, `_raw_`
+byte-buffer reads, and deeply nested lists of records/options. With the current
+`kaitai_struct_compiler` fork they generate, build, and read correctly. See
+`docs/ramses_amr.md` and `docs/ramses_rt.md` for the verified output and the
+codegen fixes they require.
 
 ## Requirements
 

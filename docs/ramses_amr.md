@@ -65,7 +65,22 @@ in the PR comment on `det-lab/kaitai_struct_awkward_runtime` #70.
 - Whole set: the Awkward backend is ~2.3x slower but ~2.4x **lower** RSS
   (257 MB vs 627 MB) because an `ak.Array` stores compact typed buffers, whereas
   the Python backend builds a Python object graph.
-- The dataset also has much larger per-CPU files (not yet covered by a schema):
-  `rt_00088.outNNNNN` ~35-37 MB each and `hydro_00088.outNNNNN` ~18.5 MB each.
-  These need `ramses_rt`/`ramses_hydro` schemas and would be the most
-  interesting stress test.
+- The dataset also has much larger per-CPU files. `ramses_rt.ksy` now covers the
+  radiative-transfer `rt_00088.outNNNNN` (~35-37 MB each) — see
+  `docs/ramses_rt.md`. `hydro_00088.outNNNNN` (~18.5 MB each) still needs a
+  `ramses_hydro` schema; those would be the most interesting stress test.
+
+## Tests
+
+`tests/test_ramses_amr.py` validates the structure of the committed
+`amr_00088_truncated_50kb.dat` sample against the simulation info:
+
+- Header globals exact (`ncpu=16, ndim=3, nlevelmax=8, ngridmax=1000000,
+  ngrid_current=27740, boxlen=6.0`).
+- `numbl` is a `[8, 16]` grid with exact values (upper rows zeroed in the
+  truncated copy).
+- For every level, the set of populated `cpu_info` entries equals the set of
+  cpus with `numbl[level][cpu] > 0`.
+- For every populated cpu, `pos_x`/`pos_y`/`pos_z` each have length
+  `== numbl[level][cpu]`.
+
